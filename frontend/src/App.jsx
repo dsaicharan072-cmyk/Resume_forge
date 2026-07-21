@@ -26,6 +26,8 @@ import ApplicationTracker from './features/applications/pages/ApplicationTracker
 
 import SettingsPage from './features/settings/pages/SettingsPage';
 
+import LandingPage from './features/marketing/pages/LandingPage';
+
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -82,8 +84,11 @@ function App() {
         <Route path="/settings" element={<SettingsPage />} />
       </Route>
       
+      {/* Public Landing Page */}
+      <Route path="/" element={<LandingPage />} />
+      
       {/* Default fallback */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

@@ -3,7 +3,7 @@ import { useApplications, useAddApplication } from '../hooks/useApplications';
 import ApplicationCard from '../components/ApplicationCard';
 import Button from '../../../components/Button';
 import Skeleton from '../../../components/Skeleton';
-import { Plus, LayoutKanban } from 'lucide-react';
+import { Plus, Kanban } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/Card';
 
 const columns = [
@@ -41,7 +41,7 @@ const ApplicationTracker = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <LayoutKanban className="text-primary" /> Application Tracker
+            <Kanban className="text-primary" /> Application Tracker
           </h1>
           <p className="text-muted-foreground">Manage your job search pipeline in one place.</p>
         </div>
