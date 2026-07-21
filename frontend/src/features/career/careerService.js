@@ -55,6 +55,16 @@ async function fetchInterviewPrep(payload) {
   return response.json();
 }
 
+async function fetchLiveJobs(minMatchScore = 70) {
+  const response = await fetch(`${API_BASE}/jobs?minMatchScore=${minMatchScore}`);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch live job feed');
+  }
+
+  return response.json();
+}
+
 export function useCompanyMatch() {
   return useMutation({
     mutationFn: fetchCompanyMatch
@@ -80,9 +90,17 @@ export function useInterviewPrep() {
   });
 }
 
+export function useLiveJobs(minMatchScore) {
+  return useQuery({
+    queryKey: ['liveJobs', minMatchScore],
+    queryFn: () => fetchLiveJobs(minMatchScore)
+  });
+}
+
 export const careerService = {
   fetchCompanyMatch,
   fetchSkillGap,
   fetchLearningRoadmap,
-  fetchInterviewPrep
+  fetchInterviewPrep,
+  fetchLiveJobs
 };

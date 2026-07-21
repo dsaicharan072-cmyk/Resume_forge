@@ -2,6 +2,7 @@ const matchingEngine = require('./career.matchingEngine');
 const skillGapEngine = require('./career.skillGapEngine');
 const learningEngine = require('./career.learningEngine');
 const interviewEngine = require('./career.interviewEngine');
+const jobsEngine = require('./career.jobsEngine');
 const careerRepository = require('./career.repository');
 
 class CareerService {
@@ -84,6 +85,18 @@ class CareerService {
       prepId: savedRecord.id,
       ...prepData
     };
+  }
+
+  /**
+   * Fetch live hiring feed filtered by candidate match %
+   */
+  async getLiveJobs(query = {}) {
+    const minMatchScore = Number(query.minMatchScore) || 70;
+    const candidateSkills = query.skills
+      ? String(query.skills).split(',')
+      : ['React', 'Node.js', 'TypeScript', 'REST APIs'];
+
+    return jobsEngine.filterJobsByMatch(candidateSkills, minMatchScore);
   }
 }
 

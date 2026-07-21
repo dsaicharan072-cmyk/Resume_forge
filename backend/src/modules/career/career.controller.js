@@ -60,6 +60,20 @@ class CareerController {
       next(error);
     }
   }
+
+  async getJobs(req, res, next) {
+    try {
+      const query = req.query || {};
+      const result = await careerService.getLiveJobs(query);
+
+      res.status(200).json({
+        success: true,
+        data: result
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new CareerController();
