@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../features/auth/hooks/useAuth';
 import { cn } from '../utils/cn';
+import CommandPalette from '../components/CommandPalette';
+import { useCommandPaletteStore } from '../hooks/useCommandPalette';
 
 const navGroups = [
   {
@@ -39,6 +41,7 @@ const MainLayout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { open: openCommandPalette } = useCommandPaletteStore();
 
   const handleLogout = () => {
     logout();
@@ -124,13 +127,22 @@ const MainLayout = () => {
           </button>
 
           <div className="flex-1 flex items-center justify-end md:justify-between">
-            <div className="hidden md:flex items-center w-full max-w-md bg-muted/50 rounded-full px-4 py-2 border border-transparent focus-within:border-border focus-within:bg-background transition-colors">
-              <Search size={16} className="text-muted-foreground mr-2" />
-              <input 
-                type="text" 
-                placeholder="Search jobs, skills, resumes..." 
-                className="bg-transparent border-none outline-none text-sm w-full"
-              />
+            <div 
+              onClick={openCommandPalette}
+              className="hidden md:flex items-center justify-between w-full max-w-md bg-muted/50 rounded-full px-4 py-2 border border-transparent hover:border-border hover:bg-background transition-colors cursor-pointer group"
+            >
+              <div className="flex items-center text-muted-foreground group-hover:text-foreground transition-colors">
+                <Search size={16} className="mr-2" />
+                <span className="text-sm">Search or jump to...</span>
+              </div>
+              <div className="flex gap-1">
+                <kbd className="inline-flex items-center rounded border border-border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+                  <span className="text-xs">⌘</span>
+                </kbd>
+                <kbd className="inline-flex items-center rounded border border-border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+                  K
+                </kbd>
+              </div>
             </div>
 
             <div className="flex items-center gap-4">
@@ -161,6 +173,9 @@ const MainLayout = () => {
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
+
+      {/* Command Palette Overlay */}
+      <CommandPalette />
     </div>
   );
 };
