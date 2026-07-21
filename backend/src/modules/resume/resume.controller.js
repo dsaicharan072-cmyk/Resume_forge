@@ -1,4 +1,8 @@
 const resumeService = require('./resume.service');
+const aiService = require('./resume.ai');
+const versioningService = require('./resume.versioning');
+const exportService = require('./resume.export');
+const resumeRepository = require('./resume.repository');
 
 exports.uploadResume = async (req, res, next) => {
   try {
@@ -38,42 +42,27 @@ exports.getResumeAnalysis = async (req, res, next) => {
   }
 };
 
-const aiService = require('./resume.ai');
-
 exports.rewriteResume = async (req, res, next) => {
   try {
     const { bullets } = req.body;
     if (!bullets || !Array.isArray(bullets)) {
       return res.status(400).json({ success: false, message: 'bullets array is required' });
     }
-    
-    // Algorithmic weak verb detection
     const weakBullets = aiService.detectWeakVerbs(bullets);
-    
-    // AI rewriting
     const rewrittenBullets = await aiService.rewriteBullets(bullets);
-    
     res.status(200).json({ 
       success: true, 
-      data: {
-        original: bullets,
-        weakBulletsDetected: weakBullets,
-        rewritten: rewrittenBullets
-      } 
+      data: { original: bullets, weakBulletsDetected: weakBullets, rewritten: rewrittenBullets } 
     });
   } catch (error) {
     next(error);
   }
 };
 
-const versioningService = require('./resume.versioning');
-
 exports.createResumeVersion = async (req, res, next) => {
   try {
     const { resumeId, versionName, parsedData } = req.body;
-    if (!resumeId || !parsedData) {
-      return res.status(400).json({ success: false, message: 'resumeId and parsedData are required' });
-    }
+    if (!resumeId || !parsedData) return res.status(400).json({ success: false, message: 'resumeId and parsedData are required' });
     const version = await versioningService.createVersion(resumeId, versionName, parsedData);
     res.status(201).json({ success: true, data: version });
   } catch (error) {
@@ -101,14 +90,9 @@ exports.listResumeVersions = async (req, res, next) => {
   }
 };
 
-const exportService = require('./resume.export');
-const versioningService = require('./resume.versioning');
-const ResumeAnalysis = require('./resumeAnalysis.model');
-
 exports.exportResume = async (req, res, next) => {
   try {
     const { id, type, format } = req.body; 
-    // type can be 'version' or 'analysis'
     if (!id || !format || !['pdf', 'docx'].includes(format)) {
       return res.status(400).json({ success: false, message: 'Valid id and format (pdf, docx) are required' });
     }
@@ -118,7 +102,7 @@ exports.exportResume = async (req, res, next) => {
       const version = await versioningService.getVersion(id);
       parsedData = version.parsedData;
     } else {
-      const analysis = await ResumeAnalysis.findOne({ resumeId: id });
+      const analysis = await resumeRepository.findAnalysisByResumeId(id);
       if (!analysis) return res.status(404).json({ success: false, message: 'Analysis not found for this Resume ID' });
       parsedData = analysis.parsedData;
     }

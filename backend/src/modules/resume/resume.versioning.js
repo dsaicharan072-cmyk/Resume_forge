@@ -1,20 +1,19 @@
-const ResumeVersion = require('./resumeVersion.model');
+const resumeRepository = require('./resume.repository');
 
 exports.createVersion = async (resumeId, versionName, parsedData) => {
-  const version = new ResumeVersion({
+  return await resumeRepository.createVersion({
     resumeId,
     versionName: versionName || 'Custom',
     parsedData
   });
-  return await version.save();
 };
 
 exports.getVersion = async (versionId) => {
-  const version = await ResumeVersion.findById(versionId);
+  const version = await resumeRepository.findVersionById(versionId);
   if (!version) throw new Error("Version not found");
   return version;
 };
 
 exports.getVersionsByResume = async (resumeId) => {
-  return await ResumeVersion.find({ resumeId }).sort({ createdAt: -1 });
+  return await resumeRepository.findVersionsByResumeId(resumeId);
 };
