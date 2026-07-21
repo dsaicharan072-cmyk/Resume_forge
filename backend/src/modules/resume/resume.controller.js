@@ -100,3 +100,47 @@ exports.listResumeVersions = async (req, res, next) => {
     next(error);
   }
 };
+
+const exportService = require('./resume.export');
+const versioningService = require('./resume.versioning');
+const ResumeAnalysis = require('./resumeAnalysis.model');
+
+exports.exportResume = async (req, res, next) => {
+  try {
+    const { id, type, format } = req.body; 
+    // type can be 'version' or 'analysis'
+    if (!id || !format || !['pdf', 'docx'].includes(format)) {
+      return res.status(400).json({ success: false, message: 'Valid id and format (pdf, docx) are required' });
+    }
+
+    let parsedData = {};
+    if (type === 'version') {
+      const version = await versioningService.getVersion(id);
+      parsedData = version.parsedData;
+    } else {
+      const analysis = await ResumeAnalysis.findOne({ resumeId: id });
+      if (!analysis) return res.status(404).json({ success: false, message: 'Analysis not found for this Resume ID' });
+      parsedData = analysis.parsedData;
+    }
+
+    let buffer;
+    let contentType;
+    let extension;
+
+    if (format === 'pdf') {
+      buffer = await exportService.exportToPdf(parsedData);
+      contentType = 'application/pdf';
+      extension = 'pdf';
+    } else {
+      buffer = await exportService.exportToDocx(parsedData);
+      contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      extension = 'docx';
+    }
+
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Content-Disposition', `attachment; filename=resume_export.${extension}`);
+    res.send(buffer);
+  } catch (error) {
+    next(error);
+  }
+};

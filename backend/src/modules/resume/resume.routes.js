@@ -10,5 +10,6 @@ router.post('/rewrite', resumeController.rewriteResume);
 router.post('/version', resumeController.createResumeVersion);
 router.get('/version/:id', resumeController.getResumeVersion);
 router.get('/:resumeId/versions', resumeController.listResumeVersions);
+router.post('/export', resumeController.exportResume);
 
 module.exports = router;
