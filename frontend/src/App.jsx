@@ -13,6 +13,15 @@ import DashboardPage from './features/dashboard/pages/DashboardPage';
 import ResumeUploadPage from './features/resume/pages/ResumeUploadPage';
 import ResumeAnalysisPage from './features/resume/pages/ResumeAnalysisPage';
 
+// Career Pages
+import CompanyMatch from './features/career/pages/CompanyMatch';
+import SkillGap from './features/career/pages/SkillGap';
+import LearningRoadmap from './features/career/pages/LearningRoadmap';
+import RecommendedProjects from './features/career/pages/RecommendedProjects';
+import InterviewPreparation from './features/career/pages/InterviewPreparation';
+import LiveJobs from './features/career/pages/LiveJobs';
+import AIRecruiter from './features/career/pages/AIRecruiter';
+
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -53,8 +62,15 @@ function App() {
         <Route path="/resume" element={<ResumeUploadPage />} />
         <Route path="/resume/analyze" element={<ResumeAnalysisPage />} />
         
-        <Route path="/career" element={<Placeholder title="Career Intelligence" />} />
-        <Route path="/jobs" element={<Placeholder title="Live Jobs Feed" />} />
+        {/* Career Feature */}
+        <Route path="/career" element={<CompanyMatch />} />
+        <Route path="/career/skills" element={<SkillGap />} />
+        <Route path="/career/roadmap" element={<LearningRoadmap />} />
+        <Route path="/career/projects" element={<RecommendedProjects />} />
+        <Route path="/career/interviews" element={<InterviewPreparation />} />
+        <Route path="/career/recruiter" element={<AIRecruiter />} />
+        <Route path="/jobs" element={<LiveJobs />} />
+        
         <Route path="/applications" element={<Placeholder title="Application Tracker" />} />
         <Route path="/settings" element={<Placeholder title="Account Settings" />} />
       </Route>

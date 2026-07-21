@@ -1,181 +1,76 @@
-import React, { useState } from 'react';
-
-const DEFAULT_JOBS_FEED = [
-  {
-    id: 'job_1',
-    company: 'Atlassian',
-    role: 'Senior Full Stack Engineer (React / Node)',
-    location: 'Remote / Hybrid',
-    salary: '$145,000 - $185,000',
-    applyLink: 'https://atlassian.com/careers/job-101',
-    requiredSkills: ['React', 'Node.js', 'TypeScript', 'REST APIs'],
-    matchedSkills: ['React', 'Node.js', 'TypeScript', 'REST APIs'],
-    matchScore: 95
-  },
-  {
-    id: 'job_2',
-    company: 'Microsoft',
-    role: 'Software Development Engineer II',
-    location: 'Redmond, WA / Remote',
-    salary: '$150,000 - $190,000',
-    applyLink: 'https://careers.microsoft.com/job-202',
-    requiredSkills: ['TypeScript', 'React', 'Node.js', 'System Design'],
-    matchedSkills: ['TypeScript', 'React', 'Node.js'],
-    matchScore: 91
-  },
-  {
-    id: 'job_3',
-    company: 'Amazon',
-    role: 'Software Development Engineer - AWS',
-    location: 'Seattle, WA',
-    salary: '$140,000 - $175,000',
-    applyLink: 'https://amazon.jobs/job-303',
-    requiredSkills: ['Java', 'Node.js', 'AWS', 'Distributed Systems'],
-    matchedSkills: ['Node.js'],
-    matchScore: 86
-  },
-  {
-    id: 'job_4',
-    company: 'Adobe',
-    role: 'Frontend Engineer (Creative Cloud)',
-    location: 'San Jose, CA',
-    salary: '$135,000 - $170,000',
-    applyLink: 'https://adobe.com/careers/job-404',
-    requiredSkills: ['JavaScript', 'React', 'HTML5', 'CSS3'],
-    matchedSkills: ['React', 'JavaScript'],
-    matchScore: 84
-  }
-];
+import React from 'react';
+import { useLiveJobs } from '../hooks/useCareer';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '../../../components/Card';
+import Skeleton from '../../../components/Skeleton';
+import Badge from '../../../components/Badge';
+import Button from '../../../components/Button';
+import { Sparkles, MapPin, DollarSign, Clock, Briefcase, ExternalLink } from 'lucide-react';
 
 const LiveJobs = () => {
-  const [minScore, setMinScore] = useState(70);
-  const [jobs] = useState(DEFAULT_JOBS_FEED);
+  const { data: jobs, isLoading, isError } = useLiveJobs();
 
-  const filteredJobs = jobs.filter(job => job.matchScore >= minScore);
-
-  const getScoreColor = (score) => {
-    if (score >= 90) return '#10B981';
-    if (score >= 80) return '#3B82F6';
-    return '#F59E0B';
-  };
+  if (isError) return <div className="p-4 text-destructive">Failed to load jobs.</div>;
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1100px', margin: '0 auto', fontFamily: 'Inter, system-ui, sans-serif', color: '#1E293B' }}>
-      <header style={{ marginBottom: '32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <h1 style={{ fontSize: '32px', fontWeight: '800', color: '#0F172A', marginBottom: '8px' }}>
-            📡 Live Hiring Opportunities
-          </h1>
-          <p style={{ fontSize: '16px', color: '#64748B' }}>
-            Public hiring feed automatically filtered and scored against your resume standards.
-          </p>
-        </div>
+    <div className="max-w-5xl mx-auto space-y-6">
+      <div className="flex flex-col gap-2 mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">Live Hiring Feed</h1>
+        <p className="text-muted-foreground">Real-time job postings tailored to your skill set.</p>
+      </div>
 
-        {/* Configurable Min Match Score Slider */}
-        <div style={{ background: '#FFFFFF', padding: '16px 20px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-          <label style={{ fontSize: '13px', fontWeight: '700', color: '#475569', display: 'block', marginBottom: '6px' }}>
-            Min Match Threshold: <strong style={{ color: '#2563EB' }}>{minScore}%</strong>
-          </label>
-          <input
-            type="range"
-            min="50"
-            max="95"
-            step="5"
-            value={minScore}
-            onChange={(e) => setMinScore(Number(e.target.value))}
-            style={{ width: '180px', cursor: 'pointer' }}
-          />
-        </div>
-      </header>
+      <div className="space-y-4">
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-48 w-full rounded-xl" />
+          ))
+        ) : (
+          jobs?.map((job) => (
+            <Card key={job.id} className="transition-all hover:border-primary/50 group">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row gap-6 justify-between">
+                  <div className="flex-1 space-y-4">
+                    
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-xl font-bold group-hover:text-primary transition-colors">{job.role}</h3>
+                        <p className="text-muted-foreground font-medium flex items-center gap-2 mt-1">
+                          <Briefcase size={16} /> {job.company}
+                        </p>
+                      </div>
+                      <Badge variant={job.match >= 90 ? 'success' : 'default'} className="md:hidden">
+                        {job.match}% Match
+                      </Badge>
+                    </div>
 
-      {/* Jobs Feed List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {filteredJobs.map((job) => {
-          const color = getScoreColor(job.matchScore);
+                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1.5"><MapPin size={16} /> {job.location}</span>
+                      <span className="flex items-center gap-1.5"><DollarSign size={16} /> {job.salary}</span>
+                      <span className="flex items-center gap-1.5"><Clock size={16} /> {job.posted}</span>
+                    </div>
 
-          return (
-            <div
-              key={job.id}
-              style={{
-                background: '#FFFFFF',
-                borderRadius: '16px',
-                border: '1px solid #E2E8F0',
-                padding: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
-                transition: 'transform 0.2s ease'
-              }}
-            >
-              <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-                <div style={{ width: '52px', height: '52px', borderRadius: '12px', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '20px', color: '#334155' }}>
-                  {job.company.charAt(0)}
-                </div>
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 inline-flex items-start gap-2">
+                      <Sparkles size={16} className="text-primary shrink-0 mt-0.5" />
+                      <p className="text-sm text-foreground">{job.rationale}</p>
+                    </div>
 
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-                    <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#0F172A', margin: 0 }}>
-                      {job.role}
-                    </h3>
-                    <span style={{ fontSize: '12px', fontWeight: '700', color: '#64748B', background: '#F1F5F9', padding: '2px 8px', borderRadius: '8px' }}>
-                      {job.company}
-                    </span>
                   </div>
-
-                  <div style={{ display: 'flex', gap: '16px', fontSize: '13px', color: '#64748B', marginBottom: '14px' }}>
-                    <span>📍 {job.location}</span>
-                    <span>💰 {job.salary}</span>
-                  </div>
-
-                  {/* Skills Chips */}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                    {job.requiredSkills.map((skill, sIdx) => {
-                      const isMatched = job.matchedSkills.includes(skill);
-                      return (
-                        <span key={sIdx} style={{
-                          background: isMatched ? '#ECFDF5' : '#F1F5F9',
-                          color: isMatched ? '#047857' : '#64748B',
-                          border: isMatched ? '1px solid #A7F3D0' : '1px solid #E2E8F0',
-                          padding: '3px 8px',
-                          borderRadius: '12px',
-                          fontSize: '11px',
-                          fontWeight: '600'
-                        }}>
-                          {skill} {isMatched ? '✓' : ''}
-                        </span>
-                      );
-                    })}
+                  
+                  <div className="flex flex-row md:flex-col items-center justify-between md:justify-center gap-4 border-t md:border-t-0 md:border-l border-border pt-4 md:pt-0 md:pl-6">
+                    <div className="hidden md:flex flex-col items-center">
+                      <span className={`text-3xl font-bold ${job.match >= 90 ? 'text-green-500' : 'text-amber-500'}`}>
+                        {job.match}%
+                      </span>
+                      <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider">Match Score</span>
+                    </div>
+                    <Button className="w-full md:w-auto shrink-0">
+                      Apply Now <ExternalLink size={16} className="ml-2" />
+                    </Button>
                   </div>
                 </div>
-              </div>
-
-              <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}>
-                <div style={{ background: `${color}15`, color: color, padding: '6px 14px', borderRadius: '16px', fontSize: '18px', fontWeight: '800' }}>
-                  {job.matchScore}% Match
-                </div>
-
-                <a
-                  href={job.applyLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    background: '#2563EB',
-                    color: '#FFFFFF',
-                    padding: '8px 18px',
-                    borderRadius: '8px',
-                    fontSize: '13px',
-                    fontWeight: '700',
-                    textDecoration: 'none',
-                    display: 'inline-block'
-                  }}
-                >
-                  Apply Now →
-                </a>
-              </div>
-            </div>
-          );
-        })}
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
     </div>
   );
