@@ -1,8 +1,3 @@
-/**
- * Data Schema / Structures for Career Intelligence Module
- * Permitted models ONLY: CareerGoal, JobMatch, LearningPlan, Application, InterviewPreparation, SkillGap
- */
-
 class JobMatchModel {
   static createRecord(userId, candidateData, matches) {
     return {
@@ -15,28 +10,28 @@ class JobMatchModel {
   }
 }
 
-class CareerGoalModel {
-  static createRecord(userId, targetRole, targetCompanies) {
+class SkillGapModel {
+  static createRecord(userId, targetRole, analysis) {
     return {
-      id: `goal_${Date.now()}`,
-      userId,
+      id: `gap_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      userId: userId || 'anonymous',
       targetRole,
-      targetCompanies,
+      analysis,
       createdAt: new Date().toISOString()
     };
   }
 }
 
+class CareerGoalModel {}
 class LearningPlanModel {}
 class ApplicationModel {}
 class InterviewPreparationModel {}
-class SkillGapModel {}
 
 module.exports = {
   JobMatchModel,
+  SkillGapModel,
   CareerGoalModel,
   LearningPlanModel,
   ApplicationModel,
-  InterviewPreparationModel,
-  SkillGapModel
+  InterviewPreparationModel
 };

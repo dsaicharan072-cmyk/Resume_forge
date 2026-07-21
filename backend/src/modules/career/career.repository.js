@@ -1,8 +1,9 @@
-const { JobMatchModel } = require('./career.model');
+const { JobMatchModel, SkillGapModel } = require('./career.model');
 
 class CareerRepository {
   constructor() {
     this.jobMatches = new Map();
+    this.skillGaps = new Map();
   }
 
   async saveJobMatch(userId, candidateData, matches) {
@@ -11,12 +12,10 @@ class CareerRepository {
     return record;
   }
 
-  async getLatestJobMatch(userId) {
-    const userMatches = Array.from(this.jobMatches.values())
-      .filter(m => m.userId === userId)
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
-    return userMatches[0] || null;
+  async saveSkillGap(userId, targetRole, analysis) {
+    const record = SkillGapModel.createRecord(userId, targetRole, analysis);
+    this.skillGaps.set(record.id, record);
+    return record;
   }
 }
 

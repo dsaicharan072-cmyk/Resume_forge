@@ -1,4 +1,5 @@
 const matchingEngine = require('./career.matchingEngine');
+const skillGapEngine = require('./career.skillGapEngine');
 const careerRepository = require('./career.repository');
 
 class CareerService {
@@ -8,7 +9,6 @@ class CareerService {
   async calculateCompanyMatches(payload = {}, userId = 'anonymous') {
     const { resumeAnalysis = {}, profile = {}, jobDescription = {} } = payload;
 
-    // Consolidate candidate skills from resume and profile
     const skillsSet = new Set([
       ...(resumeAnalysis.skills || []),
       ...(resumeAnalysis.technicalSkills || []),
@@ -25,16 +25,31 @@ class CareerService {
       keywords: resumeAnalysis.keywords || []
     };
 
-    // Calculate deterministic scores
     const matches = matchingEngine.calculateCompanyMatches(candidateData);
-
-    // Save record via Repository
     const savedRecord = await careerRepository.saveJobMatch(userId, candidateData, matches);
 
     return {
       matchId: savedRecord.id,
       matches,
       totalCompaniesAnalyzed: matches.length
+    };
+  }
+
+  /**
+   * Calculate deterministic Skill Gap Analysis
+   */
+  async calculateSkillGap(payload = {}, userId = 'anonymous') {
+    const candidateSkills = payload.candidateSkills || ['React', 'Node', 'MongoDB'];
+    const targetRoleSkills = payload.targetRoleSkills || ['React', 'Node', 'MongoDB', 'Docker', 'AWS'];
+    const targetRole = payload.targetRole || 'Senior Full Stack Engineer';
+
+    const analysis = skillGapEngine.findSkillGap(candidateSkills, targetRoleSkills);
+    const savedRecord = await careerRepository.saveSkillGap(userId, targetRole, analysis);
+
+    return {
+      skillGapId: savedRecord.id,
+      targetRole,
+      ...analysis
     };
   }
 }
