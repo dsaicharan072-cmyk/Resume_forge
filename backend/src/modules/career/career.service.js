@@ -1,0 +1,162 @@
+const matchingEngine = require('./career.matchingEngine');
+const skillGapEngine = require('./career.skillGapEngine');
+const learningEngine = require('./career.learningEngine');
+const interviewEngine = require('./career.interviewEngine');
+const jobsEngine = require('./career.jobsEngine');
+const applicationTracker = require('./career.applicationTracker');
+const applicationTracker = require('./career.applicationTracker');
+const careerAI = require('./career.ai');
+const careerRepository = require('./career.repository');
+
+class CareerService {
+  /**
+   * Calculate company matches from Resume Analysis, Profile, and Job Description
+   */
+  async calculateCompanyMatches(payload = {}, userId = 'anonymous') {
+    const { resumeAnalysis = {}, profile = {}, jobDescription = {} } = payload;
+
+    const skillsSet = new Set([
+      ...(resumeAnalysis.skills || []),
+      ...(resumeAnalysis.technicalSkills || []),
+      ...(profile.skills || []),
+      ...(jobDescription.candidateSkills || [])
+    ]);
+
+    const skills = Array.from(skillsSet);
+    const experienceYears = profile.experienceYears || resumeAnalysis.experienceYears || 2;
+
+    const candidateData = {
+      skills,
+      experienceYears,
+      keywords: resumeAnalysis.keywords || []
+    };
+
+    const matches = matchingEngine.calculateCompanyMatches(candidateData);
+    const savedRecord = await careerRepository.saveJobMatch(userId, candidateData, matches);
+
+    return {
+      matchId: savedRecord.id,
+      matches,
+      totalCompaniesAnalyzed: matches.length
+    };
+  }
+
+  /**
+   * Calculate deterministic Skill Gap Analysis
+   */
+  async calculateSkillGap(payload = {}, userId = 'anonymous') {
+    const candidateSkills = payload.candidateSkills || ['React', 'Node', 'MongoDB'];
+    const targetRoleSkills = payload.targetRoleSkills || ['React', 'Node', 'MongoDB', 'Docker', 'AWS'];
+    const targetRole = payload.targetRole || 'Senior Full Stack Engineer';
+
+    const analysis = skillGapEngine.findSkillGap(candidateSkills, targetRoleSkills);
+    const savedRecord = await careerRepository.saveSkillGap(userId, targetRole, analysis);
+
+    return {
+      skillGapId: savedRecord.id,
+      targetRole,
+      ...analysis
+    };
+  }
+
+  /**
+   * Get learning recommendation roadmap for missing skills
+   */
+  async getLearningRoadmap(query = {}, userId = 'anonymous') {
+    const missingSkills = query.missingSkills
+      ? String(query.missingSkills).split(',')
+      : ['Docker', 'AWS', 'System Design'];
+
+    const roadmapData = await learningEngine.generateLearningRoadmap(missingSkills);
+    const savedRecord = await careerRepository.saveLearningPlan(userId, roadmapData);
+
+    return {
+      planId: savedRecord.id,
+      ...roadmapData
+    };
+  }
+
+  /**
+   * Generate interview preparation content
+   */
+  async generateInterviewPrep(payload = {}, userId = 'anonymous') {
+    const targetRole = payload.targetRole || 'Full Stack Engineer';
+    const prepData = await interviewEngine.generateInterviewPrep(targetRole);
+    const savedRecord = await careerRepository.saveInterviewPrep(userId, targetRole, prepData);
+
+    return {
+      prepId: savedRecord.id,
+      ...prepData
+    };
+  }
+
+  /**
+   * Fetch live hiring feed filtered by candidate match %
+   */
+  async getLiveJobs(query = {}) {
+    const minMatchScore = Number(query.minMatchScore) || 70;
+    const candidateSkills = query.skills
+      ? String(query.skills).split(',')
+      : ['React', 'Node.js', 'TypeScript', 'REST APIs'];
+
+    return jobsEngine.filterJobsByMatch(candidateSkills, minMatchScore);
+  }
+
+  /**
+   * Save or update job application
+   */
+  async saveApplication(payload = {}, userId = 'anonymous') {
+    const record = await careerRepository.saveApplication(userId, payload);
+    return record;
+  }
+
+  /**
+   * Get all applications and analytics for user
+   */
+  async getApplications(userId = 'anonymous') {
+    const apps = await careerRepository.getApplicationsByUser(userId);
+
+    // If repository is empty, return initial mock dataset for demonstration
+    const list = apps.length > 0 ? apps : [
+      { id: 'app_1', userId, company: 'Atlassian', role: 'Senior Full Stack Engineer', status: 'Interview', location: 'Remote', appliedDate: '2026-07-15' },
+      { id: 'app_2', userId, company: 'Microsoft', role: 'SDE II', status: 'OA', location: 'Redmond, WA', appliedDate: '2026-07-18' },
+      { id: 'app_3', userId, company: 'Amazon', role: 'SDE AWS', status: 'Applied', location: 'Seattle, WA', appliedDate: '2026-07-20' },
+      { id: 'app_4', userId, company: 'Adobe', role: 'Frontend Engineer', status: 'Offer', location: 'San Jose, CA', appliedDate: '2026-07-10' }
+    ];
+
+    const analytics = applicationTracker.calculateAnalytics(list);
+
+    return {
+      analytics,
+      applications: list
+    };
+  }
+
+  /**
+   * Evaluate resume against target company via AI Recruiter Mode
+   */
+  async evaluateByRecruiter(payload = {}, userId = 'anonymous') {
+    const { resumeAnalysis = {}, companyName = 'Tech Corp' } = payload;
+    
+    // Deterministic ATS Scoring
+    const skills = resumeAnalysis.skills || ['JavaScript', 'React'];
+    const experienceYears = resumeAnalysis.experienceYears || 2;
+    
+    let atsScore = 50 + (skills.length * 5) + (experienceYears * 2);
+    if (atsScore > 98) atsScore = 98;
+    
+    const atsDecision = atsScore >= 75 ? 'PASS' : 'FAIL';
+    
+    // AI Explanations
+    const aiFeedback = await careerAI.generateRecruiterEvaluation(resumeAnalysis, companyName);
+
+    return {
+      companyName,
+      atsScore,
+      atsDecision,
+      ...aiFeedback
+    };
+  }
+}
+
+module.exports = new CareerService();

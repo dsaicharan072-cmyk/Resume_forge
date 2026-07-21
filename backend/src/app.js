@@ -50,6 +50,8 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 const profileRoutes = require('./modules/profile/profile.routes');
 app.use('/api/profile', profileRoutes);
+const careerRoutes = require('./modules/career/career.routes');
+app.use('/api/career', careerRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'ResumeForge API is running' });
