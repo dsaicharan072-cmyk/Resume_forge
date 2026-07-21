@@ -22,16 +22,26 @@ class SkillGapModel {
   }
 }
 
+class LearningPlanModel {
+  static createRecord(userId, roadmapData) {
+    return {
+      id: `plan_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      userId: userId || 'anonymous',
+      roadmapData,
+      createdAt: new Date().toISOString()
+    };
+  }
+}
+
 class CareerGoalModel {}
-class LearningPlanModel {}
 class ApplicationModel {}
 class InterviewPreparationModel {}
 
 module.exports = {
   JobMatchModel,
   SkillGapModel,
-  CareerGoalModel,
   LearningPlanModel,
+  CareerGoalModel,
   ApplicationModel,
   InterviewPreparationModel
 };

@@ -30,6 +30,21 @@ class CareerController {
       next(error);
     }
   }
+
+  async getRoadmap(req, res, next) {
+    try {
+      const query = req.query || {};
+      const userId = req.user?.id || 'anonymous';
+      const result = await careerService.getLearningRoadmap(query, userId);
+
+      res.status(200).json({
+        success: true,
+        data: result
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new CareerController();

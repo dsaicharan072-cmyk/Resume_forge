@@ -1,5 +1,6 @@
 const matchingEngine = require('./career.matchingEngine');
 const skillGapEngine = require('./career.skillGapEngine');
+const learningEngine = require('./career.learningEngine');
 const careerRepository = require('./career.repository');
 
 class CareerService {
@@ -50,6 +51,23 @@ class CareerService {
       skillGapId: savedRecord.id,
       targetRole,
       ...analysis
+    };
+  }
+
+  /**
+   * Get learning recommendation roadmap for missing skills
+   */
+  async getLearningRoadmap(query = {}, userId = 'anonymous') {
+    const missingSkills = query.missingSkills
+      ? String(query.missingSkills).split(',')
+      : ['Docker', 'AWS', 'System Design'];
+
+    const roadmapData = await learningEngine.generateLearningRoadmap(missingSkills);
+    const savedRecord = await careerRepository.saveLearningPlan(userId, roadmapData);
+
+    return {
+      planId: savedRecord.id,
+      ...roadmapData
     };
   }
 }
