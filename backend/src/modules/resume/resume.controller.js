@@ -15,3 +15,25 @@ exports.uploadResume = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.analyzeResume = async (req, res, next) => {
+  try {
+    const { resumeId } = req.body;
+    if (!resumeId) return res.status(400).json({ success: false, message: 'resumeId is required' });
+    
+    const analysis = await resumeService.processResumeAnalysis(resumeId);
+    res.status(200).json({ success: true, data: analysis });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getResumeAnalysis = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const analysis = await resumeService.processResumeAnalysis(id);
+    res.status(200).json({ success: true, data: analysis });
+  } catch (error) {
+    next(error);
+  }
+};
