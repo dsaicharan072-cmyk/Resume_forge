@@ -3,6 +3,7 @@ const Resume = require('./resume.model');
 const ResumeAnalysis = require('./resumeAnalysis.model');
 const parser = require('./resume.parser');
 const keywordEngine = require('./resume.keywordEngine');
+const atsEngine = require('./resume.atsEngine');
 
 exports.processResumeUpload = async (file, userId) => {
   return new Promise((resolve, reject) => {
@@ -36,25 +37,24 @@ exports.processResumeAnalysis = async (resumeId, jobDescription = "") => {
   
   let analysis = await ResumeAnalysis.findOne({ resumeId });
   
-  // Need the raw text for keyword engine
   const text = await parser.extractText(resume.fileUrl, resume.fileType);
-  
   const parsedData = parser.parseResumeText(text);
   const keywordMetrics = keywordEngine.compareKeywords(text, jobDescription);
+  const atsScore = atsEngine.calculateScore(parsedData, keywordMetrics);
   
   if (analysis) {
     analysis.parsedData = parsedData;
     analysis.jobDescription = jobDescription;
-    if (keywordMetrics) {
-      analysis.keywordMetrics = keywordMetrics;
-    }
+    if (keywordMetrics) analysis.keywordMetrics = keywordMetrics;
+    analysis.atsScore = atsScore;
     await analysis.save();
   } else {
     analysis = new ResumeAnalysis({
       resumeId,
       jobDescription,
       parsedData,
-      keywordMetrics: keywordMetrics || {}
+      keywordMetrics: keywordMetrics || {},
+      atsScore: atsScore
     });
     await analysis.save();
   }

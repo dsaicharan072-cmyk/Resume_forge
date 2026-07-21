@@ -18,6 +18,10 @@ const resumeAnalysisSchema = new mongoose.Schema({
     missing: { type: Array, default: [] },
     duplicate: { type: Array, default: [] },
     unused: { type: Array, default: [] }
+  },
+  atsScore: {
+    total: { type: Number, default: 0 },
+    breakdown: { type: Array, default: [] }
   }
 }, { timestamps: true });
 module.exports = mongoose.model("ResumeAnalysis", resumeAnalysisSchema);
