@@ -1,6 +1,7 @@
 const matchingEngine = require('./career.matchingEngine');
 const skillGapEngine = require('./career.skillGapEngine');
 const learningEngine = require('./career.learningEngine');
+const interviewEngine = require('./career.interviewEngine');
 const careerRepository = require('./career.repository');
 
 class CareerService {
@@ -68,6 +69,20 @@ class CareerService {
     return {
       planId: savedRecord.id,
       ...roadmapData
+    };
+  }
+
+  /**
+   * Generate interview preparation content
+   */
+  async generateInterviewPrep(payload = {}, userId = 'anonymous') {
+    const targetRole = payload.targetRole || 'Full Stack Engineer';
+    const prepData = await interviewEngine.generateInterviewPrep(targetRole);
+    const savedRecord = await careerRepository.saveInterviewPrep(userId, targetRole, prepData);
+
+    return {
+      prepId: savedRecord.id,
+      ...prepData
     };
   }
 }

@@ -45,6 +45,21 @@ class CareerController {
       next(error);
     }
   }
+
+  async postInterviewPrep(req, res, next) {
+    try {
+      const payload = req.body || {};
+      const userId = req.user?.id || 'anonymous';
+      const result = await careerService.generateInterviewPrep(payload, userId);
+
+      res.status(200).json({
+        success: true,
+        data: result
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new CareerController();

@@ -33,15 +33,26 @@ class LearningPlanModel {
   }
 }
 
+class InterviewPreparationModel {
+  static createRecord(userId, targetRole, prepData) {
+    return {
+      id: `prep_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      userId: userId || 'anonymous',
+      targetRole,
+      prepData,
+      createdAt: new Date().toISOString()
+    };
+  }
+}
+
 class CareerGoalModel {}
 class ApplicationModel {}
-class InterviewPreparationModel {}
 
 module.exports = {
   JobMatchModel,
   SkillGapModel,
   LearningPlanModel,
+  InterviewPreparationModel,
   CareerGoalModel,
-  ApplicationModel,
-  InterviewPreparationModel
+  ApplicationModel
 };

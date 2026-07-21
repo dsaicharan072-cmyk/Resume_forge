@@ -41,6 +41,20 @@ async function fetchLearningRoadmap(missingSkills = '') {
   return response.json();
 }
 
+async function fetchInterviewPrep(payload) {
+  const response = await fetch(`${API_BASE}/interview`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to generate interview prep');
+  }
+
+  return response.json();
+}
+
 export function useCompanyMatch() {
   return useMutation({
     mutationFn: fetchCompanyMatch
@@ -60,8 +74,15 @@ export function useLearningRoadmap(missingSkills) {
   });
 }
 
+export function useInterviewPrep() {
+  return useMutation({
+    mutationFn: fetchInterviewPrep
+  });
+}
+
 export const careerService = {
   fetchCompanyMatch,
   fetchSkillGap,
-  fetchLearningRoadmap
+  fetchLearningRoadmap,
+  fetchInterviewPrep
 };

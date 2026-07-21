@@ -11,4 +11,7 @@ router.post('/skill-gap', (req, res, next) => careerController.getSkillGap(req, 
 // GET /career/roadmap
 router.get('/roadmap', (req, res, next) => careerController.getRoadmap(req, res, next));
 
+// POST /career/interview
+router.post('/interview', (req, res, next) => careerController.postInterviewPrep(req, res, next));
+
 module.exports = router;
