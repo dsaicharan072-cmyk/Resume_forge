@@ -4,6 +4,8 @@ const learningEngine = require('./career.learningEngine');
 const interviewEngine = require('./career.interviewEngine');
 const jobsEngine = require('./career.jobsEngine');
 const applicationTracker = require('./career.applicationTracker');
+const applicationTracker = require('./career.applicationTracker');
+const careerAI = require('./career.ai');
 const careerRepository = require('./career.repository');
 
 class CareerService {
@@ -127,6 +129,32 @@ class CareerService {
     return {
       analytics,
       applications: list
+    };
+  }
+
+  /**
+   * Evaluate resume against target company via AI Recruiter Mode
+   */
+  async evaluateByRecruiter(payload = {}, userId = 'anonymous') {
+    const { resumeAnalysis = {}, companyName = 'Tech Corp' } = payload;
+    
+    // Deterministic ATS Scoring
+    const skills = resumeAnalysis.skills || ['JavaScript', 'React'];
+    const experienceYears = resumeAnalysis.experienceYears || 2;
+    
+    let atsScore = 50 + (skills.length * 5) + (experienceYears * 2);
+    if (atsScore > 98) atsScore = 98;
+    
+    const atsDecision = atsScore >= 75 ? 'PASS' : 'FAIL';
+    
+    // AI Explanations
+    const aiFeedback = await careerAI.generateRecruiterEvaluation(resumeAnalysis, companyName);
+
+    return {
+      companyName,
+      atsScore,
+      atsDecision,
+      ...aiFeedback
     };
   }
 }

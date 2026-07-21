@@ -103,6 +103,21 @@ class CareerController {
       next(error);
     }
   }
+
+  async postRecruiter(req, res, next) {
+    try {
+      const payload = req.body || {};
+      const userId = req.user?.id || 'anonymous';
+      const result = await careerService.evaluateByRecruiter(payload, userId);
+
+      res.status(200).json({
+        success: true,
+        data: result
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new CareerController();

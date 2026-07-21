@@ -9,6 +9,7 @@ import RecommendedProjects from './features/career/pages/RecommendedProjects';
 import InterviewPreparation from './features/career/pages/InterviewPreparation';
 import LiveJobs from './features/career/pages/LiveJobs';
 import ApplicationTracker from './features/career/pages/ApplicationTracker';
+import AIRecruiter from './features/career/pages/AIRecruiter';
 
 const navItems = [
   { path: '/career/match', label: 'Company Match', icon: '🏢' },
@@ -18,6 +19,7 @@ const navItems = [
   { path: '/career/interview', label: 'Interview Prep', icon: '🧠' },
   { path: '/career/jobs', label: 'Live Hiring Feed', icon: '💼' },
   { path: '/career/tracker', label: 'App Tracker', icon: '📈' },
+  { path: '/career/recruiter', label: 'AI Recruiter', icon: '🤖' },
 ];
 
 function App() {
@@ -84,6 +86,7 @@ function App() {
           <Route path="/career/interview" element={<InterviewPreparation />} />
           <Route path="/career/jobs" element={<LiveJobs />} />
           <Route path="/career/tracker" element={<ApplicationTracker />} />
+          <Route path="/career/recruiter" element={<AIRecruiter />} />
         </Routes>
       </main>
 

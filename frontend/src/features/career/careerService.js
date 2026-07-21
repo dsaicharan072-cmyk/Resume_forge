@@ -89,6 +89,20 @@ async function createApplication(payload) {
   return response.json();
 }
 
+async function fetchRecruiterEvaluation(payload) {
+  const response = await fetch(`${API_BASE}/recruiter`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to evaluate via AI Recruiter');
+  }
+
+  return response.json();
+}
+
 export function useCompanyMatch() {
   return useMutation({
     mutationFn: fetchCompanyMatch
@@ -134,6 +148,12 @@ export function useCreateApplication() {
   });
 }
 
+export function useRecruiter() {
+  return useMutation({
+    mutationFn: fetchRecruiterEvaluation
+  });
+}
+
 export const careerService = {
   fetchCompanyMatch,
   fetchSkillGap,
@@ -141,5 +161,6 @@ export const careerService = {
   fetchInterviewPrep,
   fetchLiveJobs,
   fetchApplications,
-  createApplication
+  createApplication,
+  fetchRecruiterEvaluation
 };
