@@ -22,6 +22,8 @@ import InterviewPreparation from './features/career/pages/InterviewPreparation';
 import LiveJobs from './features/career/pages/LiveJobs';
 import AIRecruiter from './features/career/pages/AIRecruiter';
 
+import ApplicationTracker from './features/applications/pages/ApplicationTracker';
+
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -71,7 +73,8 @@ function App() {
         <Route path="/career/recruiter" element={<AIRecruiter />} />
         <Route path="/jobs" element={<LiveJobs />} />
         
-        <Route path="/applications" element={<Placeholder title="Application Tracker" />} />
+        {/* Applications Feature */}
+        <Route path="/applications" element={<ApplicationTracker />} />
         <Route path="/settings" element={<Placeholder title="Account Settings" />} />
       </Route>
       
