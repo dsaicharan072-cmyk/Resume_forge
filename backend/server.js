@@ -10,6 +10,16 @@ try {
   console.warn('Warning: dotenv module not found. Make sure to install dependencies.');
 }
 
+const validateEnv = require('./src/config/envValidator');
+const logger = require('./src/shared/utils/logger');
+
+try {
+  validateEnv();
+} catch (error) {
+  logger.error(error.message);
+  process.exit(1);
+}
+
 const http = require('http');
 const app = require('./src/app');
 const connectDB = require('./src/database/connection');

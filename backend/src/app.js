@@ -20,14 +20,24 @@ const authRoutes = require('./modules/auth/auth.routes');
 
 const app = express();
 
+const errorHandler = require('./middlewares/errorHandler');
 // Security Middlewares
 if (helmet) app.use(helmet());
 if (cors) app.use(cors());
 
+// HTTP Request Logger
+let morgan;
+try {
+  morgan = require('morgan');
+  app.use(morgan('dev'));
+} catch (e) {
+  console.warn('Warning: morgan is not installed.');
+}
+
 if (rateLimit) {
   const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    windowMs: 15 * 60 * 1000,
+    max: 100,
     message: 'Too many requests from this IP, please try again after 15 minutes',
   });
   app.use('/api', limiter);
@@ -45,10 +55,7 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'ResumeForge API is running' });
 });
 
-// Global Error Handler (to be fully implemented in Sprint 4)
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ success: false, error: 'Server Error' });
-});
+// Global Error Handler
+app.use(errorHandler);
 
 module.exports = app;
