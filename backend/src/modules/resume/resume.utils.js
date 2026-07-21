@@ -1,0 +1,1 @@
+export const formatResumeData = (data) => data;

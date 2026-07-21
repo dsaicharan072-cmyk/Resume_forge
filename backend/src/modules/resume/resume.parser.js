@@ -1,0 +1,1 @@
+export const parseDocument = async (buffer, type) => {};

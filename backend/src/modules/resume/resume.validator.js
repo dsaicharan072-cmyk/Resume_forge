@@ -1,0 +1,1 @@
+export const validateUpload = (req, res, next) => { next(); };
