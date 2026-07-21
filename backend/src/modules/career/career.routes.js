@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const careerController = require('./career.controller');
 
-// router.post('/match', careerController.getMatch);
+// POST /career/match
+router.post('/match', (req, res, next) => careerController.getCompanyMatch(req, res, next));
 
 module.exports = router;
