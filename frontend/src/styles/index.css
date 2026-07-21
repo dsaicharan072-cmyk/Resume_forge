@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #0a0a0b;
+    --foreground: #ffffff;
+    --muted: #a1a1aa;
+    --border: #27272a;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --surface: #121214;
+    --surface-hover: #1e1e20;
+    --radius: 0.5rem;
+  }
+
+  body {
+    @apply bg-background text-white font-sans antialiased overflow-x-hidden;
+  }
+}
+
+@layer components {
+  /* Reusable Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-hover shadow-glow;
+  }
+
+  .btn-secondary {
+    @apply bg-surface border border-border text-white hover:bg-surface-hover;
+  }
+
+  /* Reusable Cards */
+  .card {
+    @apply rounded-xl border border-border bg-surface text-white shadow-sm overflow-hidden;
+  }
+}
