@@ -1,0 +1,130 @@
+const resumeService = require('./resume.service');
+const aiService = require('./resume.ai');
+const versioningService = require('./resume.versioning');
+const exportService = require('./resume.export');
+const resumeRepository = require('./resume.repository');
+
+exports.uploadResume = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+    const userId = req.user ? req.user.id : null;
+    const resume = await resumeService.processResumeUpload(req.file, userId);
+    res.status(201).json({ success: true, data: resume });
+  } catch (error) {
+    if (error.message && error.message.includes('Unsupported file type')) {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    next(error);
+  }
+};
+
+exports.analyzeResume = async (req, res, next) => {
+  try {
+    const { resumeId, jobDescription } = req.body;
+    if (!resumeId) return res.status(400).json({ success: false, message: 'resumeId is required' });
+    
+    const analysis = await resumeService.processResumeAnalysis(resumeId, jobDescription);
+    res.status(200).json({ success: true, data: analysis });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getResumeAnalysis = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const analysis = await resumeService.processResumeAnalysis(id);
+    res.status(200).json({ success: true, data: analysis });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.rewriteResume = async (req, res, next) => {
+  try {
+    const { bullets } = req.body;
+    if (!bullets || !Array.isArray(bullets)) {
+      return res.status(400).json({ success: false, message: 'bullets array is required' });
+    }
+    const weakBullets = aiService.detectWeakVerbs(bullets);
+    const rewrittenBullets = await aiService.rewriteBullets(bullets);
+    res.status(200).json({ 
+      success: true, 
+      data: { original: bullets, weakBulletsDetected: weakBullets, rewritten: rewrittenBullets } 
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.createResumeVersion = async (req, res, next) => {
+  try {
+    const { resumeId, versionName, parsedData } = req.body;
+    if (!resumeId || !parsedData) return res.status(400).json({ success: false, message: 'resumeId and parsedData are required' });
+    const version = await versioningService.createVersion(resumeId, versionName, parsedData);
+    res.status(201).json({ success: true, data: version });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getResumeVersion = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const version = await versioningService.getVersion(id);
+    res.status(200).json({ success: true, data: version });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.listResumeVersions = async (req, res, next) => {
+  try {
+    const { resumeId } = req.params;
+    const versions = await versioningService.getVersionsByResume(resumeId);
+    res.status(200).json({ success: true, data: versions });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.exportResume = async (req, res, next) => {
+  try {
+    const { id, type, format } = req.body; 
+    if (!id || !format || !['pdf', 'docx'].includes(format)) {
+      return res.status(400).json({ success: false, message: 'Valid id and format (pdf, docx) are required' });
+    }
+
+    let parsedData = {};
+    if (type === 'version') {
+      const version = await versioningService.getVersion(id);
+      parsedData = version.parsedData;
+    } else {
+      const analysis = await resumeRepository.findAnalysisByResumeId(id);
+      if (!analysis) return res.status(404).json({ success: false, message: 'Analysis not found for this Resume ID' });
+      parsedData = analysis.parsedData;
+    }
+
+    let buffer;
+    let contentType;
+    let extension;
+
+    if (format === 'pdf') {
+      buffer = await exportService.exportToPdf(parsedData);
+      contentType = 'application/pdf';
+      extension = 'pdf';
+    } else {
+      buffer = await exportService.exportToDocx(parsedData);
+      contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      extension = 'docx';
+    }
+
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Content-Disposition', `attachment; filename=resume_export.${extension}`);
+    res.send(buffer);
+  } catch (error) {
+    next(error);
+  }
+};

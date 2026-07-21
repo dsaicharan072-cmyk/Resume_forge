@@ -1,0 +1,1 @@
+exports.RESUME_STATUS = { PENDING: "PENDING" };

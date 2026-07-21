@@ -1,0 +1,1 @@
+exports.formatResumeData = (data) => data;
