@@ -5,6 +5,7 @@ import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import CompanyMatch from './features/career/pages/CompanyMatch';
 import SkillGap from './features/career/pages/SkillGap';
 import LearningRoadmap from './features/career/pages/LearningRoadmap';
+import RecommendedProjects from './features/career/pages/RecommendedProjects';
 import InterviewPreparation from './features/career/pages/InterviewPreparation';
 import LiveJobs from './features/career/pages/LiveJobs';
 import ApplicationTracker from './features/career/pages/ApplicationTracker';
@@ -13,6 +14,7 @@ const navItems = [
   { path: '/career/match', label: 'Company Match', icon: '🏢' },
   { path: '/career/skill-gap', label: 'Skill Gap Analysis', icon: '📊' },
   { path: '/career/roadmap', label: 'Learning Roadmap', icon: '🗺️' },
+  { path: '/career/projects', label: 'Project Ideas', icon: '🚀' },
   { path: '/career/interview', label: 'Interview Prep', icon: '🧠' },
   { path: '/career/jobs', label: 'Live Hiring Feed', icon: '💼' },
   { path: '/career/tracker', label: 'App Tracker', icon: '📈' },
@@ -78,6 +80,7 @@ function App() {
           <Route path="/career/match" element={<CompanyMatch />} />
           <Route path="/career/skill-gap" element={<SkillGap />} />
           <Route path="/career/roadmap" element={<LearningRoadmap />} />
+          <Route path="/career/projects" element={<RecommendedProjects />} />
           <Route path="/career/interview" element={<InterviewPreparation />} />
           <Route path="/career/jobs" element={<LiveJobs />} />
           <Route path="/career/tracker" element={<ApplicationTracker />} />
