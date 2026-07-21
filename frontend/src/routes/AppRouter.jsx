@@ -7,6 +7,8 @@ import AuthLayout from '../layouts/AuthLayout';
 const DashboardPage = lazy(() => import('../features/dashboard/pages/DashboardPage'));
 const LoginPage = lazy(() => import('../features/auth/pages/LoginPage'));
 
+const RegisterPage = lazy(() => import('../features/auth/pages/RegisterPage'));
+
 // Simple loading fallback
 const PageLoader = () => (
   <div className="flex h-full w-full items-center justify-center p-8">
@@ -26,7 +28,14 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      // Register will go here
+      {
+        path: '/register',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <RegisterPage />
+          </Suspense>
+        ),
+      },
     ],
   },
   {

@@ -1,25 +1,33 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { useLogin } from '../hooks/useAuth';
+import { useRegister } from '../hooks/useAuth';
 import { Input } from '../../../components/Input';
 import { Button } from '../../../components/Button';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const { mutate: loginUser, isPending } = useLogin();
+  const { mutate: registerUser, isPending } = useRegister();
 
   const onSubmit = (data) => {
-    loginUser(data);
+    registerUser(data);
   };
 
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h3 className="text-2xl font-bold">Welcome back</h3>
-        <p className="text-muted text-sm mt-1">Sign in to your ResumeForge account</p>
+        <h3 className="text-2xl font-bold">Create an account</h3>
+        <p className="text-muted text-sm mt-1">Start your career journey with ResumeForge</p>
       </div>
       
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <Input 
+          label="Full Name"
+          type="text"
+          placeholder="John Doe"
+          {...register("name", { required: "Name is required" })}
+          error={errors.name?.message}
+        />
+        
         <Input 
           label="Email"
           type="email"
@@ -39,7 +47,8 @@ export default function LoginPage() {
           type="password"
           placeholder="••••••••"
           {...register("password", { 
-            required: "Password is required"
+            required: "Password is required",
+            minLength: { value: 6, message: "Minimum 6 characters required" }
           })}
           error={errors.password?.message}
         />
@@ -49,12 +58,12 @@ export default function LoginPage() {
           className="w-full"
           isLoading={isPending}
         >
-          Sign In
+          Create Account
         </Button>
       </form>
       
       <div className="text-center text-sm text-muted">
-        Don't have an account? <Link to="/register" className="text-primary hover:underline">Register here</Link>
+        Already have an account? <Link to="/login" className="text-primary hover:underline">Sign in</Link>
       </div>
     </div>
   );
