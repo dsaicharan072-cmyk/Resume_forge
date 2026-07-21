@@ -37,3 +37,25 @@ export const rewriteBullets = async (bullets) => {
   }
   return response.json();
 };
+
+export const createResumeVersion = async ({ resumeId, versionName, parsedData }) => {
+  const response = await fetch('/api/resume/version', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ resumeId, versionName, parsedData }),
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to create resume version');
+  }
+  return response.json();
+};
+
+export const getResumeVersions = async (resumeId) => {
+  const response = await fetch(`/api/resume/${resumeId}/versions`);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to fetch resume versions');
+  }
+  return response.json();
+};

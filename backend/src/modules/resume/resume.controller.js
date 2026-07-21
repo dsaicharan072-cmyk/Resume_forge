@@ -65,3 +65,38 @@ exports.rewriteResume = async (req, res, next) => {
     next(error);
   }
 };
+
+const versioningService = require('./resume.versioning');
+
+exports.createResumeVersion = async (req, res, next) => {
+  try {
+    const { resumeId, versionName, parsedData } = req.body;
+    if (!resumeId || !parsedData) {
+      return res.status(400).json({ success: false, message: 'resumeId and parsedData are required' });
+    }
+    const version = await versioningService.createVersion(resumeId, versionName, parsedData);
+    res.status(201).json({ success: true, data: version });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getResumeVersion = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const version = await versioningService.getVersion(id);
+    res.status(200).json({ success: true, data: version });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.listResumeVersions = async (req, res, next) => {
+  try {
+    const { resumeId } = req.params;
+    const versions = await versioningService.getVersionsByResume(resumeId);
+    res.status(200).json({ success: true, data: versions });
+  } catch (error) {
+    next(error);
+  }
+};
