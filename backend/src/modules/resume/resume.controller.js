@@ -18,10 +18,10 @@ exports.uploadResume = async (req, res, next) => {
 
 exports.analyzeResume = async (req, res, next) => {
   try {
-    const { resumeId } = req.body;
+    const { resumeId, jobDescription } = req.body;
     if (!resumeId) return res.status(400).json({ success: false, message: 'resumeId is required' });
     
-    const analysis = await resumeService.processResumeAnalysis(resumeId);
+    const analysis = await resumeService.processResumeAnalysis(resumeId, jobDescription);
     res.status(200).json({ success: true, data: analysis });
   } catch (error) {
     next(error);

@@ -12,11 +12,11 @@ export const uploadResume = async (file) => {
   return response.json();
 };
 
-export const analyzeResume = async (resumeId) => {
+export const analyzeResume = async ({ resumeId, jobDescription }) => {
   const response = await fetch('/api/resume/analyze', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ resumeId }),
+    body: JSON.stringify({ resumeId, jobDescription }),
   });
   if (!response.ok) {
     const errorData = await response.json();

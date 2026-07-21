@@ -2,6 +2,7 @@ const cloudinary = require('../../config/cloudinary');
 const Resume = require('./resume.model');
 const ResumeAnalysis = require('./resumeAnalysis.model');
 const parser = require('./resume.parser');
+const keywordEngine = require('./resume.keywordEngine');
 
 exports.processResumeUpload = async (file, userId) => {
   return new Promise((resolve, reject) => {
@@ -29,23 +30,36 @@ exports.processResumeUpload = async (file, userId) => {
   });
 };
 
-exports.processResumeAnalysis = async (resumeId) => {
-  let analysis = await ResumeAnalysis.findOne({ resumeId });
-  if (analysis) return analysis; 
-  
+exports.processResumeAnalysis = async (resumeId, jobDescription = "") => {
   const resume = await Resume.findById(resumeId);
   if (!resume) throw new Error("Resume not found");
   
+  let analysis = await ResumeAnalysis.findOne({ resumeId });
+  
+  // Need the raw text for keyword engine
   const text = await parser.extractText(resume.fileUrl, resume.fileType);
+  
   const parsedData = parser.parseResumeText(text);
+  const keywordMetrics = keywordEngine.compareKeywords(text, jobDescription);
   
-  analysis = new ResumeAnalysis({
-    resumeId,
-    parsedData
-  });
-  await analysis.save();
+  if (analysis) {
+    analysis.parsedData = parsedData;
+    analysis.jobDescription = jobDescription;
+    if (keywordMetrics) {
+      analysis.keywordMetrics = keywordMetrics;
+    }
+    await analysis.save();
+  } else {
+    analysis = new ResumeAnalysis({
+      resumeId,
+      jobDescription,
+      parsedData,
+      keywordMetrics: keywordMetrics || {}
+    });
+    await analysis.save();
+  }
   
-  resume.status = 'PARSED';
+  resume.status = 'ANALYZED';
   await resume.save();
   
   return analysis;
