@@ -10,6 +10,8 @@ import MainLayout from './layouts/MainLayout';
 import LoginPage from './features/auth/pages/LoginPage';
 import RegisterPage from './features/auth/pages/RegisterPage';
 import DashboardPage from './features/dashboard/pages/DashboardPage';
+import ResumeUploadPage from './features/resume/pages/ResumeUploadPage';
+import ResumeAnalysisPage from './features/resume/pages/ResumeAnalysisPage';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
@@ -46,7 +48,11 @@ function App() {
         </ProtectedRoute>
       }>
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/resume" element={<Placeholder title="Resume Management" />} />
+        
+        {/* Resume Feature */}
+        <Route path="/resume" element={<ResumeUploadPage />} />
+        <Route path="/resume/analyze" element={<ResumeAnalysisPage />} />
+        
         <Route path="/career" element={<Placeholder title="Career Intelligence" />} />
         <Route path="/jobs" element={<Placeholder title="Live Jobs Feed" />} />
         <Route path="/applications" element={<Placeholder title="Application Tracker" />} />
