@@ -1,122 +1,97 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React from 'react';
+import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
+
+// Career Pages
+import CompanyMatch from './features/career/pages/CompanyMatch';
+import SkillGap from './features/career/pages/SkillGap';
+import LearningRoadmap from './features/career/pages/LearningRoadmap';
+import RecommendedProjects from './features/career/pages/RecommendedProjects';
+import InterviewPreparation from './features/career/pages/InterviewPreparation';
+import LiveJobs from './features/career/pages/LiveJobs';
+import ApplicationTracker from './features/career/pages/ApplicationTracker';
+import AIRecruiter from './features/career/pages/AIRecruiter';
+
+const navItems = [
+  { path: '/career/match', label: 'Company Match', icon: '🏢' },
+  { path: '/career/skill-gap', label: 'Skill Gap Analysis', icon: '📊' },
+  { path: '/career/roadmap', label: 'Learning Roadmap', icon: '🗺️' },
+  { path: '/career/projects', label: 'Project Ideas', icon: '🚀' },
+  { path: '/career/interview', label: 'Interview Prep', icon: '🧠' },
+  { path: '/career/jobs', label: 'Live Hiring Feed', icon: '💼' },
+  { path: '/career/tracker', label: 'App Tracker', icon: '📈' },
+  { path: '/career/recruiter', label: 'AI Recruiter', icon: '🤖' },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F8FAFC', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      
+      {/* Sidebar */}
+      <aside style={{ width: '280px', backgroundColor: '#FFFFFF', borderRight: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ padding: '24px', borderBottom: '1px solid #E2E8F0' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#1E293B', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '28px' }}>⚒️</span> Forge
+          </h2>
+          <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#64748B', fontWeight: '500' }}>Career Intelligence AI</p>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+        
+        <nav style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+          <div style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: '700', color: '#94A3B8', letterSpacing: '0.05em', marginBottom: '8px', paddingLeft: '12px' }}>
+            Career OS
+          </div>
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              style={({ isActive }) => ({
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px 16px',
+                borderRadius: '12px',
+                textDecoration: 'none',
+                color: isActive ? '#2563EB' : '#475569',
+                backgroundColor: isActive ? '#EFF6FF' : 'transparent',
+                fontWeight: isActive ? '700' : '500',
+                transition: 'all 0.2s ease',
+              })}
+            >
+              <span style={{ fontSize: '18px' }}>{item.icon}</span>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div style={{ padding: '24px', borderTop: '1px solid #E2E8F0', marginTop: 'auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', color: '#475569' }}>
+              SC
+            </div>
+            <div>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#1E293B' }}>Sai Charan</p>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748B' }}>Pro Member</p>
+            </div>
+          </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      </aside>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* Main Content Area */}
+      <main style={{ flex: 1, overflowY: 'auto' }}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/career/match" replace />} />
+          <Route path="/career/match" element={<CompanyMatch />} />
+          <Route path="/career/skill-gap" element={<SkillGap />} />
+          <Route path="/career/roadmap" element={<LearningRoadmap />} />
+          <Route path="/career/projects" element={<RecommendedProjects />} />
+          <Route path="/career/interview" element={<InterviewPreparation />} />
+          <Route path="/career/jobs" element={<LiveJobs />} />
+          <Route path="/career/tracker" element={<ApplicationTracker />} />
+          <Route path="/career/recruiter" element={<AIRecruiter />} />
+        </Routes>
+      </main>
+
+    </div>
+  );
 }
 
-export default App
+export default App;
