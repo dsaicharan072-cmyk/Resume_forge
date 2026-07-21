@@ -24,6 +24,8 @@ import AIRecruiter from './features/career/pages/AIRecruiter';
 
 import ApplicationTracker from './features/applications/pages/ApplicationTracker';
 
+import SettingsPage from './features/settings/pages/SettingsPage';
+
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -75,7 +77,9 @@ function App() {
         
         {/* Applications Feature */}
         <Route path="/applications" element={<ApplicationTracker />} />
-        <Route path="/settings" element={<Placeholder title="Account Settings" />} />
+        
+        {/* Settings Feature */}
+        <Route path="/settings" element={<SettingsPage />} />
       </Route>
       
       {/* Default fallback */}
