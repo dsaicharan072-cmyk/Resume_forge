@@ -1,3 +1,3 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const resumeVersionSchema = new mongoose.Schema({});
-export default mongoose.model("ResumeVersion", resumeVersionSchema);
+module.exports = mongoose.model("ResumeVersion", resumeVersionSchema);

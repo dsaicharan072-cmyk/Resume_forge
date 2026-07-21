@@ -1,1 +1,1 @@
-export * from "./resume.routes.js";
+module.exports = require("./resume.routes.js");

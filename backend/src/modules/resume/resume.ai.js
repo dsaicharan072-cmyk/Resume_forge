@@ -1,1 +1,1 @@
-export const rewriteBullets = async (text) => {};
+exports.rewriteBullets = async (text) => {};

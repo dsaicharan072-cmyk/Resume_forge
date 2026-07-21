@@ -1,1 +1,1 @@
-export const extractKeywords = (text) => [];
+exports.extractKeywords = (text) => [];

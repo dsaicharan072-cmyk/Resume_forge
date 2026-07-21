@@ -1,1 +1,1 @@
-export const exportToPdf = async (resumeId) => {};
+exports.exportToPdf = async (resumeId) => {};

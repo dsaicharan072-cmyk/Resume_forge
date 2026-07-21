@@ -1,1 +1,1 @@
-export const formatResumeData = (data) => data;
+exports.formatResumeData = (data) => data;

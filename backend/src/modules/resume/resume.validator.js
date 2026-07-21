@@ -1,1 +1,1 @@
-export const validateUpload = (req, res, next) => { next(); };
+exports.validateUpload = (req, res, next) => { next(); };

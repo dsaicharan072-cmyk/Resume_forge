@@ -1,1 +1,1 @@
-export const RESUME_STATUS = { PENDING: "PENDING" };
+exports.RESUME_STATUS = { PENDING: "PENDING" };

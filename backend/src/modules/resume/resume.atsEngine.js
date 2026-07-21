@@ -1,1 +1,1 @@
-export const calculateScore = (data) => 0;
+exports.calculateScore = (data) => 0;

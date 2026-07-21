@@ -1,1 +1,1 @@
-export const createVersion = async (resumeId) => {};
+exports.createVersion = async (resumeId) => {};

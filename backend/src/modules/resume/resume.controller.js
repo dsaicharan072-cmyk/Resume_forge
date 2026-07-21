@@ -1,2 +1,2 @@
-export const uploadResume = async (req, res) => {};
-export const analyzeResume = async (req, res) => {};
+exports.uploadResume = async (req, res) => {};
+exports.analyzeResume = async (req, res) => {};

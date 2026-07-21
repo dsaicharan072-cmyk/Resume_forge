@@ -1,1 +1,1 @@
-export const saveResume = async (data) => {};
+exports.saveResume = async (data) => {};

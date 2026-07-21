@@ -1,1 +1,1 @@
-export const processResume = async (file) => {};
+exports.processResume = async (file) => {};
