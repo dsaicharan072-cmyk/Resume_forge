@@ -37,3 +37,31 @@ exports.getResumeAnalysis = async (req, res, next) => {
     next(error);
   }
 };
+
+const aiService = require('./resume.ai');
+
+exports.rewriteResume = async (req, res, next) => {
+  try {
+    const { bullets } = req.body;
+    if (!bullets || !Array.isArray(bullets)) {
+      return res.status(400).json({ success: false, message: 'bullets array is required' });
+    }
+    
+    // Algorithmic weak verb detection
+    const weakBullets = aiService.detectWeakVerbs(bullets);
+    
+    // AI rewriting
+    const rewrittenBullets = await aiService.rewriteBullets(bullets);
+    
+    res.status(200).json({ 
+      success: true, 
+      data: {
+        original: bullets,
+        weakBulletsDetected: weakBullets,
+        rewritten: rewrittenBullets
+      } 
+    });
+  } catch (error) {
+    next(error);
+  }
+};

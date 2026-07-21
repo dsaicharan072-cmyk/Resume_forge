@@ -24,3 +24,16 @@ export const analyzeResume = async ({ resumeId, jobDescription }) => {
   }
   return response.json();
 };
+
+export const rewriteBullets = async (bullets) => {
+  const response = await fetch('/api/resume/rewrite', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ bullets }),
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to rewrite bullets');
+  }
+  return response.json();
+};
