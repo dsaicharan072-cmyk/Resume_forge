@@ -17,4 +17,10 @@ router.get('/jobs', (req, res, next) => careerController.getJobs(req, res, next)
 // POST /career/interview
 router.post('/interview', (req, res, next) => careerController.postInterviewPrep(req, res, next));
 
+// POST /career/application
+router.post('/application', (req, res, next) => careerController.postApplication(req, res, next));
+
+// GET /career/applications
+router.get('/applications', (req, res, next) => careerController.getApplications(req, res, next));
+
 module.exports = router;

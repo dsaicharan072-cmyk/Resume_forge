@@ -65,6 +65,30 @@ async function fetchLiveJobs(minMatchScore = 70) {
   return response.json();
 }
 
+async function fetchApplications() {
+  const response = await fetch(`${API_BASE}/applications`);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch applications');
+  }
+
+  return response.json();
+}
+
+async function createApplication(payload) {
+  const response = await fetch(`${API_BASE}/application`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to create application');
+  }
+
+  return response.json();
+}
+
 export function useCompanyMatch() {
   return useMutation({
     mutationFn: fetchCompanyMatch
@@ -97,10 +121,25 @@ export function useLiveJobs(minMatchScore) {
   });
 }
 
+export function useApplications() {
+  return useQuery({
+    queryKey: ['applications'],
+    queryFn: fetchApplications
+  });
+}
+
+export function useCreateApplication() {
+  return useMutation({
+    mutationFn: createApplication
+  });
+}
+
 export const careerService = {
   fetchCompanyMatch,
   fetchSkillGap,
   fetchLearningRoadmap,
   fetchInterviewPrep,
-  fetchLiveJobs
+  fetchLiveJobs,
+  fetchApplications,
+  createApplication
 };

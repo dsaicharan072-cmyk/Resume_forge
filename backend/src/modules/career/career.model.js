@@ -45,14 +45,29 @@ class InterviewPreparationModel {
   }
 }
 
+class ApplicationModel {
+  static createRecord(userId, appData) {
+    return {
+      id: appData.id || `app_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      userId: userId || 'anonymous',
+      company: appData.company || 'Unknown Company',
+      role: appData.role || 'Software Engineer',
+      status: appData.status || 'Saved', // Saved, Applied, OA, Interview, Offer, Rejected
+      location: appData.location || 'Remote',
+      appliedDate: appData.appliedDate || new Date().toISOString().split('T')[0],
+      notes: appData.notes || '',
+      updatedAt: new Date().toISOString()
+    };
+  }
+}
+
 class CareerGoalModel {}
-class ApplicationModel {}
 
 module.exports = {
   JobMatchModel,
   SkillGapModel,
   LearningPlanModel,
   InterviewPreparationModel,
-  CareerGoalModel,
-  ApplicationModel
+  ApplicationModel,
+  CareerGoalModel
 };

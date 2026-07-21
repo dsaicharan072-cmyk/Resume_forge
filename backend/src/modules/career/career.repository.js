@@ -1,4 +1,10 @@
-const { JobMatchModel, SkillGapModel, LearningPlanModel, InterviewPreparationModel } = require('./career.model');
+const {
+  JobMatchModel,
+  SkillGapModel,
+  LearningPlanModel,
+  InterviewPreparationModel,
+  ApplicationModel
+} = require('./career.model');
 
 class CareerRepository {
   constructor() {
@@ -6,6 +12,7 @@ class CareerRepository {
     this.skillGaps = new Map();
     this.learningPlans = new Map();
     this.interviewPreps = new Map();
+    this.applications = new Map();
   }
 
   async saveJobMatch(userId, candidateData, matches) {
@@ -30,6 +37,18 @@ class CareerRepository {
     const record = InterviewPreparationModel.createRecord(userId, targetRole, prepData);
     this.interviewPreps.set(record.id, record);
     return record;
+  }
+
+  async saveApplication(userId, appData) {
+    const record = ApplicationModel.createRecord(userId, appData);
+    this.applications.set(record.id, record);
+    return record;
+  }
+
+  async getApplicationsByUser(userId) {
+    return Array.from(this.applications.values())
+      .filter(a => a.userId === userId)
+      .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
   }
 }
 

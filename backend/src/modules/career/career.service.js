@@ -3,6 +3,7 @@ const skillGapEngine = require('./career.skillGapEngine');
 const learningEngine = require('./career.learningEngine');
 const interviewEngine = require('./career.interviewEngine');
 const jobsEngine = require('./career.jobsEngine');
+const applicationTracker = require('./career.applicationTracker');
 const careerRepository = require('./career.repository');
 
 class CareerService {
@@ -97,6 +98,36 @@ class CareerService {
       : ['React', 'Node.js', 'TypeScript', 'REST APIs'];
 
     return jobsEngine.filterJobsByMatch(candidateSkills, minMatchScore);
+  }
+
+  /**
+   * Save or update job application
+   */
+  async saveApplication(payload = {}, userId = 'anonymous') {
+    const record = await careerRepository.saveApplication(userId, payload);
+    return record;
+  }
+
+  /**
+   * Get all applications and analytics for user
+   */
+  async getApplications(userId = 'anonymous') {
+    const apps = await careerRepository.getApplicationsByUser(userId);
+
+    // If repository is empty, return initial mock dataset for demonstration
+    const list = apps.length > 0 ? apps : [
+      { id: 'app_1', userId, company: 'Atlassian', role: 'Senior Full Stack Engineer', status: 'Interview', location: 'Remote', appliedDate: '2026-07-15' },
+      { id: 'app_2', userId, company: 'Microsoft', role: 'SDE II', status: 'OA', location: 'Redmond, WA', appliedDate: '2026-07-18' },
+      { id: 'app_3', userId, company: 'Amazon', role: 'SDE AWS', status: 'Applied', location: 'Seattle, WA', appliedDate: '2026-07-20' },
+      { id: 'app_4', userId, company: 'Adobe', role: 'Frontend Engineer', status: 'Offer', location: 'San Jose, CA', appliedDate: '2026-07-10' }
+    ];
+
+    const analytics = applicationTracker.calculateAnalytics(list);
+
+    return {
+      analytics,
+      applications: list
+    };
   }
 }
 
