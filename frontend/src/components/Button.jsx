@@ -14,7 +14,7 @@ const Button = React.forwardRef(({
   const baseStyles = "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
   
   const variants = {
-    primary: "bg-gradient-to-r from-[#9D4EDD] to-[#7B2CBF] text-white shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/40 hover:-translate-y-0.5",
+    primary: "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5",
     secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 hover:-translate-y-0.5",
     outline: "border-2 border-border/50 bg-background shadow-sm hover:bg-muted hover:border-border hover:-translate-y-0.5",
     ghost: "hover:bg-muted hover:text-foreground",
