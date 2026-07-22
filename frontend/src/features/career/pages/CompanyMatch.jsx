@@ -16,8 +16,9 @@ const CompanyMatch = () => {
   }, [getMatches]);
 
   useEffect(() => {
-    if (data?.matches?.length > 0) {
-      setSelectedCompany(data.matches[0]);
+    const matches = data?.data?.matches ?? data?.matches ?? [];
+    if (matches.length > 0) {
+      setSelectedCompany(matches[0]);
     }
   }, [data]);
 
@@ -44,7 +45,7 @@ const CompanyMatch = () => {
     );
   }
 
-  const matches = data?.matches || [];
+  const matches = data?.data?.matches ?? data?.matches ?? [];
 
   return (
     <div className="p-8 max-w-7xl mx-auto font-sans text-foreground">
@@ -62,7 +63,11 @@ const CompanyMatch = () => {
         <div>
           <h2 className="text-xl font-bold mb-4">Company Rankings</h2>
           <div className="flex flex-col gap-4">
-            {matches.map((item) => {
+            {matches.length === 0 ? (
+              <div className="rounded-xl border border-border bg-surface p-6 text-center text-muted">
+                No company matches are available yet. Add skills to your profile and try again.
+              </div>
+            ) : matches.map((item) => {
               const isSelected = selectedCompany?.companyId === item.companyId;
               const color = getScoreColor(item.score);
 
