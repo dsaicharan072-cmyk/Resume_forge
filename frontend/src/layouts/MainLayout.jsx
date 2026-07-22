@@ -54,7 +54,7 @@ const MainLayout = () => {
       {/* Sidebar (Desktop) / Drawer (Mobile) */}
       <aside 
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-zinc-900 border-r border-border transform transition-transform duration-300 ease-in-out md:translate-x-0 md:relative md:flex flex-col",
+          "fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-zinc-900 shadow-[2px_0_24px_rgba(0,0,0,0.02)] transform transition-transform duration-300 ease-in-out md:translate-x-0 md:relative md:flex flex-col border-r border-transparent",
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -81,10 +81,10 @@ const MainLayout = () => {
                     to={item.path}
                     end={item.path === '/career'} // Exact match for parent routes to prevent active state bleeding
                     className={({ isActive }) => cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                      "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
                       isActive 
-                        ? "bg-primary/10 text-primary" 
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        ? "bg-gradient-to-r from-[#9D4EDD] to-[#7B2CBF] text-white shadow-md shadow-purple-500/20 translate-x-1" 
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground hover:translate-x-1"
                     )}
                     onClick={() => setIsSidebarOpen(false)}
                   >
@@ -97,23 +97,25 @@ const MainLayout = () => {
           ))}
         </div>
 
-        <div className="p-4 border-t border-border shrink-0">
-          <NavLink
-            to="/settings"
-            className={({ isActive }) => cn(
-              "flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium transition-colors mb-1",
-              isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <Settings size={16} /> Settings
-          </NavLink>
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-          >
-            <LogOut size={16} />
-            Sign Out
-          </button>
+        <div className="p-4 shrink-0">
+          <div className="bg-primary/5 rounded-2xl p-3 border border-primary/10">
+            <NavLink
+              to="/settings"
+              className={({ isActive }) => cn(
+                "flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-medium transition-all duration-300 mb-1",
+                isActive ? "bg-gradient-to-r from-[#9D4EDD] to-[#7B2CBF] text-white shadow-md" : "text-foreground hover:bg-white/50 hover:translate-x-1"
+              )}
+            >
+              <Settings size={16} /> Settings
+            </NavLink>
+            <button 
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-medium text-muted-foreground hover:bg-white/50 hover:text-foreground transition-all duration-300 hover:translate-x-1"
+            >
+              <LogOut size={16} />
+              Sign Out
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -121,7 +123,7 @@ const MainLayout = () => {
       <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
         
         {/* Top Navbar */}
-        <header className="h-16 flex items-center justify-between px-4 sm:px-6 border-b border-border bg-white dark:bg-zinc-900 z-10 shrink-0">
+        <header className="h-16 flex items-center justify-between px-4 sm:px-6 border-b border-border/50 bg-background/80 backdrop-blur-md z-10 shrink-0">
           <button className="md:hidden text-muted-foreground mr-4" onClick={() => setIsSidebarOpen(true)}>
             <Menu size={24} />
           </button>

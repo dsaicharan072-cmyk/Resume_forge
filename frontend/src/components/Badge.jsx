@@ -2,12 +2,12 @@ import React from 'react';
 import { cn } from '../utils/cn';
 
 const badgeVariants = {
-  default: "bg-primary text-primary-foreground hover:bg-primary/80",
-  secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-  destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/80",
-  outline: "text-foreground",
-  success: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800/30",
-  warning: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-800/30",
+  default: "bg-primary/10 text-primary border-transparent hover:bg-primary/20",
+  secondary: "bg-secondary text-secondary-foreground border-transparent hover:bg-secondary/80",
+  destructive: "bg-destructive/10 text-destructive border-transparent hover:bg-destructive/20",
+  outline: "text-foreground border-border/50",
+  success: "bg-green-500/10 text-green-600 border-transparent hover:bg-green-500/20",
+  warning: "bg-amber-500/10 text-amber-600 border-transparent hover:bg-amber-500/20",
 };
 
 export const Badge = ({ className, variant = "default", ...props }) => {
