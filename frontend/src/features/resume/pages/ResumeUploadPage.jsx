@@ -46,7 +46,7 @@ const ResumeUploadPage = () => {
               size="lg" 
               disabled={!file || isPending} 
               onClick={handleAnalyze}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto text-black"
             >
               {isPending ? (
                 <>
