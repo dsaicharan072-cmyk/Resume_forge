@@ -20,6 +20,8 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
+      - key: NODE_VERSION
+        value: 20
 
   - type: web
     name: resume-forge-frontend
@@ -32,6 +34,8 @@ services:
           type: web
           name: resume-forge-backend
           envVarKey: RENDER_EXTERNAL_URL
+      - key: NODE_VERSION
+        value: 20
     routes:
       - type: rewrite
         source: /*
