@@ -6,8 +6,8 @@ const badgeVariants = {
   secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
   destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/80",
   outline: "text-foreground",
-  success: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800/30",
-  warning: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-800/30",
+  success: "bg-green-100 text-green-800 border-green-200",
+  warning: "bg-amber-100 text-amber-800 border-amber-200",
 };
 
 export const Badge = ({ className, variant = "default", ...props }) => {

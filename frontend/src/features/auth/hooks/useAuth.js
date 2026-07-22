@@ -19,7 +19,7 @@ export const useLogin = () => {
       navigate('/dashboard');
     },
     onError: (error) => {
-      const message = error.response?.data?.message || 'Login failed. Please try again.';
+      const message = error.response?.data?.message || error.response?.data?.error || 'Login failed. Please try again.';
       toast.error(message);
     }
   });
@@ -38,7 +38,7 @@ export const useRegister = () => {
       navigate('/dashboard');
     },
     onError: (error) => {
-      const message = error.response?.data?.message || 'Registration failed. Please try again.';
+      const message = error.response?.data?.message || error.response?.data?.error || 'Registration failed. Please try again.';
       toast.error(message);
     }
   });

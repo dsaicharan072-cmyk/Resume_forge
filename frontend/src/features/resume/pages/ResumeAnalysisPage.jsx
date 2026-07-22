@@ -1,7 +1,7 @@
 import React from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, Navigate } from 'react-router-dom';
 import { useResumeAnalysis } from '../hooks/useResume';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '../../../components/Card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '../../../components/Card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../../components/Tabs';
 import Badge from '../../../components/Badge';
 import Progress from '../../../components/Progress';
@@ -47,8 +47,7 @@ const ResumeAnalysisPage = () => {
   const { data, isLoading, isError } = useResumeAnalysis(id);
 
   if (!id) {
-    navigate('/resume');
-    return null;
+    return <Navigate to="/resume" replace />;
   }
 
   const handleCopy = (text) => {

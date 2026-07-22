@@ -1,5 +1,3 @@
-import api from '../../../services/api';
-
 export const dashboardService = {
   getDashboardData: async () => {
     // Mock implementation returning comprehensive data

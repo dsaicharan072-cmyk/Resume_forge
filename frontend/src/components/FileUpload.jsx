@@ -14,6 +14,18 @@ export const FileUpload = ({ onUpload, accept = ".pdf,.doc,.docx", maxSize = 5 *
     else if (e.type === 'dragleave') setIsDragging(false);
   }, []);
 
+  const validateAndSetFile = useCallback((selectedFile) => {
+    setError('');
+
+    if (selectedFile.size > maxSize) {
+      setError(`File size exceeds ${maxSize / (1024 * 1024)}MB limit`);
+      return;
+    }
+
+    setFile(selectedFile);
+    onUpload?.(selectedFile);
+  }, [maxSize, onUpload]);
+
   const handleDrop = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -22,7 +34,7 @@ export const FileUpload = ({ onUpload, accept = ".pdf,.doc,.docx", maxSize = 5 *
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       validateAndSetFile(e.dataTransfer.files[0]);
     }
-  }, []);
+  }, [validateAndSetFile]);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -31,21 +43,10 @@ export const FileUpload = ({ onUpload, accept = ".pdf,.doc,.docx", maxSize = 5 *
     }
   };
 
-  const validateAndSetFile = (selectedFile) => {
-    setError('');
-    
-    if (selectedFile.size > maxSize) {
-      setError(`File size exceeds ${maxSize / (1024 * 1024)}MB limit`);
-      return;
-    }
-    
-    setFile(selectedFile);
-    if (onUpload) onUpload(selectedFile);
-  };
-
   const removeFile = () => {
     setFile(null);
     setError('');
+    onUpload?.(null);
   };
 
   return (

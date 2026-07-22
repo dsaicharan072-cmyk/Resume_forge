@@ -7,7 +7,7 @@ export default function AuthLayout() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
       
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 text-center">
-        <h2 className="text-3xl font-extrabold text-white">ResumeForge</h2>
+        <h2 className="text-3xl font-extrabold text-foreground">ResumeForge</h2>
         <p className="mt-2 text-sm text-muted">
           Your AI-powered career assistant
         </p>

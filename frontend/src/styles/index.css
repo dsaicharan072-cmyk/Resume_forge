@@ -4,19 +4,23 @@
 
 @layer base {
   :root {
-    --background: #09090b;
-    --foreground: #f8fafc;
-    --muted: #a1a1aa;
-    --border: #27272a;
-    --primary: #3b82f6;
-    --primary-hover: #2563eb;
-    --surface: #18181b;
-    --surface-hover: #27272a;
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --surface: #ffffff;
+    --surface-hover: #f1f5f9;
     --radius: 0.5rem;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
+  }
+
+  button, input {
+    font: inherit;
   }
 }
 

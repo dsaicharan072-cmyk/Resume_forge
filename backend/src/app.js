@@ -52,6 +52,8 @@ const profileRoutes = require('./modules/profile/profile.routes');
 app.use('/api/profile', profileRoutes);
 const careerRoutes = require('./modules/career/career.routes');
 app.use('/api/career', careerRoutes);
+const resumeRoutes = require('./modules/resume/resume.routes');
+app.use('/api/resume', resumeRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'ResumeForge API is running' });

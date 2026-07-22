@@ -13,9 +13,8 @@ const navItems = [
 
 export default function MainLayout() {
   return (
-    <div className="flex h-screen bg-background text-slate-900 overflow-hidden">
-      {/* Sidebar Mock */}
-      <aside className="w-64 flex-shrink-0 border-r border-border bg-surface hidden md:flex flex-col">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden">
+      <aside className="w-64 flex-shrink-0 border-r border-border bg-surface shadow-sm hidden md:flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-border">
           <span className="text-xl font-bold text-primary">ResumeForge</span>
         </div>
@@ -42,8 +41,7 @@ export default function MainLayout() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Navbar Mock */}
-        <header className="h-16 flex-shrink-0 border-b border-border bg-background flex items-center justify-between px-6">
+        <header className="h-16 flex-shrink-0 border-b border-border bg-surface/90 backdrop-blur flex items-center justify-between px-6">
           <div className="md:hidden text-lg font-bold">ResumeForge</div>
           <div className="hidden md:flex flex-1"></div>
           <div className="flex items-center space-x-4">
