@@ -3,7 +3,8 @@ import { useLiveJobs } from '../careerService';
 
 const LiveJobs = () => {
   const [minScore, setMinScore] = useState(70);
-  const { data: jobs, isPending, isError } = useLiveJobs(minScore);
+  const { data: responseData, isPending, isError } = useLiveJobs(minScore);
+  const jobs = responseData?.data || responseData || [];
 
   const getScoreColor = (score) => {
     if (score >= 90) return '#10B981'; // Emerald
@@ -12,20 +13,20 @@ const LiveJobs = () => {
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto font-sans text-slate-900">
+    <div className="p-8 max-w-6xl mx-auto font-sans text-foreground">
       <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
+          <h1 className="text-3xl font-extrabold text-foreground mb-2">
             📡 Live Hiring Opportunities
           </h1>
-          <p className="text-base text-slate-500">
+          <p className="text-base text-muted">
             Public hiring feed automatically filtered and scored against your resume standards.
           </p>
         </div>
 
         {/* Configurable Min Match Score Slider */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm min-w-[240px]">
-          <label className="text-sm font-bold text-slate-600 block mb-3">
+        <div className="bg-surface p-5 rounded-xl border border-border shadow-sm min-w-[240px]">
+          <label className="text-sm font-bold text-muted block mb-3">
             Min Match Threshold: <strong className="text-blue-600 ml-1">{minScore}%</strong>
           </label>
           <input
@@ -56,8 +57,8 @@ const LiveJobs = () => {
       {!isPending && !isError && jobs && (
         <div className="flex flex-col gap-5">
           {jobs.length === 0 ? (
-            <div className="bg-slate-50 p-10 text-center rounded-2xl border border-slate-200">
-              <p className="text-slate-500 font-medium">No jobs found matching your minimum score threshold.</p>
+            <div className="bg-surface-hover p-10 text-center rounded-2xl border border-border">
+              <p className="text-muted font-medium">No jobs found matching your minimum score threshold.</p>
             </div>
           ) : (
             jobs.map((job) => {
@@ -66,24 +67,24 @@ const LiveJobs = () => {
               return (
                 <div
                   key={job.id}
-                  className="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col md:flex-row md:items-center justify-between shadow-sm hover:shadow-md transition-shadow gap-6"
+                  className="bg-surface rounded-2xl border border-border p-6 flex flex-col md:flex-row md:items-center justify-between shadow-sm hover:shadow-md transition-shadow gap-6"
                 >
                   <div className="flex gap-5 items-start">
-                    <div className="w-14 h-14 shrink-0 rounded-xl bg-slate-100 flex items-center justify-center font-extrabold text-xl text-slate-700">
+                    <div className="w-14 h-14 shrink-0 rounded-xl bg-surface-hover flex items-center justify-center font-extrabold text-xl text-muted">
                       {job.company.charAt(0)}
                     </div>
 
                     <div>
                       <div className="flex flex-wrap items-center gap-3 mb-1">
-                        <h3 className="text-xl font-extrabold text-slate-900 m-0">
+                        <h3 className="text-xl font-extrabold text-foreground m-0">
                           {job.role}
                         </h3>
-                        <span className="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full">
+                        <span className="text-xs font-bold text-muted bg-surface-hover px-3 py-1 rounded-full">
                           {job.company}
                         </span>
                       </div>
 
-                      <div className="flex gap-4 text-sm font-medium text-slate-500 mb-4">
+                      <div className="flex gap-4 text-sm font-medium text-muted mb-4">
                         <span>📍 {job.location}</span>
                         <span>💰 {job.salary}</span>
                       </div>
@@ -96,7 +97,7 @@ const LiveJobs = () => {
                             <span key={sIdx} className={`px-3 py-1 rounded-full text-xs font-bold border ${
                               isMatched 
                                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                                : 'bg-slate-50 text-slate-500 border-slate-200'
+                                : 'bg-surface-hover text-muted border-border'
                             }`}>
                               {skill} {isMatched ? '✓' : ''}
                             </span>

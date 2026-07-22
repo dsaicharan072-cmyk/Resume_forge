@@ -7,9 +7,9 @@ export const Button = forwardRef(
     
     const variants = {
       primary: "bg-primary text-white hover:bg-primary-hover shadow-glow",
-      secondary: "bg-surface border border-border text-slate-900 hover:bg-surface-hover",
-      outline: "border border-border bg-transparent text-slate-900 hover:bg-surface",
-      ghost: "bg-transparent text-slate-600 hover:bg-surface hover:text-slate-900",
+      secondary: "bg-surface border border-border text-foreground hover:bg-surface-hover",
+      outline: "border border-border bg-transparent text-foreground hover:bg-surface",
+      ghost: "bg-transparent text-muted hover:bg-surface hover:text-foreground",
     };
 
     const sizes = {

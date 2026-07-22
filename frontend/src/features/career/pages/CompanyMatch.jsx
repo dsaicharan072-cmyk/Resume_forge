@@ -47,12 +47,12 @@ const CompanyMatch = () => {
   const matches = data?.matches || [];
 
   return (
-    <div className="p-8 max-w-7xl mx-auto font-sans text-slate-900">
+    <div className="p-8 max-w-7xl mx-auto font-sans text-foreground">
       <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
+        <h1 className="text-3xl font-extrabold text-foreground mb-2">
           🏢 Target Company Match Engine
         </h1>
-        <p className="text-base text-slate-500">
+        <p className="text-base text-muted">
           Deterministic algorithm matching your resume & profile against top tech company standards.
         </p>
       </header>
@@ -72,20 +72,20 @@ const CompanyMatch = () => {
                   onClick={() => setSelectedCompany(item)}
                   className={`flex items-center justify-between p-5 rounded-xl border cursor-pointer transition-all ${
                     isSelected 
-                      ? 'bg-slate-50 border-transparent shadow-md' 
-                      : 'bg-white border-slate-200 hover:bg-slate-50'
+                      ? 'bg-surface-hover border-transparent shadow-md' 
+                      : 'bg-surface border-border hover:bg-surface-hover'
                   }`}
                   style={{
                     borderColor: isSelected ? color : undefined,
                   }}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center font-bold text-lg text-slate-700">
+                    <div className="w-12 h-12 rounded-lg bg-surface-hover flex items-center justify-center font-bold text-lg text-muted">
                       {item.companyName.charAt(0)}
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold m-0 text-slate-900">{item.companyName}</h3>
-                      <span className="text-sm text-slate-500">{item.domain}</span>
+                      <h3 className="text-lg font-bold m-0 text-foreground">{item.companyName}</h3>
+                      <span className="text-sm text-muted">{item.domain}</span>
                     </div>
                   </div>
 
@@ -103,13 +103,13 @@ const CompanyMatch = () => {
 
         {/* Selected Company Details */}
         {selectedCompany && (
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
+          <div className="bg-surface p-6 rounded-2xl border border-border shadow-sm h-fit">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <h2 className="text-2xl font-extrabold text-slate-900 m-0">
+                <h2 className="text-2xl font-extrabold text-foreground m-0">
                   {selectedCompany.companyName}
                 </h2>
-                <span className="text-sm text-slate-500">{selectedCompany.domain}</span>
+                <span className="text-sm text-muted">{selectedCompany.domain}</span>
               </div>
               <div 
                 className="px-4 py-2 rounded-full text-lg font-extrabold"
@@ -123,10 +123,10 @@ const CompanyMatch = () => {
             </div>
 
             <div 
-              className="mb-6 p-4 rounded-lg bg-slate-50 border-l-4"
+              className="mb-6 p-4 rounded-lg bg-surface-hover border-l-4"
               style={{ borderLeftColor: getScoreColor(selectedCompany.score) }}
             >
-              <p className="m-0 text-sm text-slate-700 font-medium">
+              <p className="m-0 text-sm text-muted font-medium">
                 {selectedCompany.reasons.summary}
               </p>
             </div>
@@ -136,7 +136,7 @@ const CompanyMatch = () => {
               <h4 className="text-sm font-bold text-emerald-500 mb-2">
                 ✅ Key Strengths & Fit
               </h4>
-              <ul className="m-0 pl-5 text-sm text-slate-700 list-disc">
+              <ul className="m-0 pl-5 text-sm text-muted list-disc">
                 {selectedCompany.reasons.strongFit.map((reason, idx) => (
                   <li key={idx} className="mb-1">{reason}</li>
                 ))}
@@ -148,7 +148,7 @@ const CompanyMatch = () => {
               <h4 className="text-sm font-bold text-red-500 mb-2">
                 ⚠️ Identified Gaps
               </h4>
-              <ul className="m-0 pl-5 text-sm text-slate-700 list-disc">
+              <ul className="m-0 pl-5 text-sm text-muted list-disc">
                 {selectedCompany.reasons.gaps.map((reason, idx) => (
                   <li key={idx} className="mb-1">{reason}</li>
                 ))}
@@ -157,7 +157,7 @@ const CompanyMatch = () => {
 
             {/* Matched Skills Chips */}
             <div className="mb-5">
-              <h4 className="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Matched Skills</h4>
+              <h4 className="text-xs font-bold text-muted mb-2 uppercase tracking-wider">Matched Skills</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedCompany.matchedSkills.map((skill, idx) => (
                   <span key={idx} className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
@@ -169,7 +169,7 @@ const CompanyMatch = () => {
 
             {/* Missing Skills Chips */}
             <div>
-              <h4 className="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Missing Skills</h4>
+              <h4 className="text-xs font-bold text-muted mb-2 uppercase tracking-wider">Missing Skills</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedCompany.missingSkills.map((skill, idx) => (
                   <span key={idx} className="bg-red-50 text-red-700 border border-red-200 px-3 py-1 rounded-full text-xs font-semibold">

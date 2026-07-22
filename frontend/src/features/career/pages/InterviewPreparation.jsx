@@ -31,7 +31,8 @@ const InterviewPreparation = () => {
     );
   }
 
-  const prep = data || {
+  const responseData = data?.data || data;
+  const prep = responseData || {
     targetRole: 'Loading...',
     technicalQuestions: [],
     behavioralQuestions: [],
@@ -40,18 +41,18 @@ const InterviewPreparation = () => {
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto font-sans text-slate-900">
+    <div className="p-8 max-w-6xl mx-auto font-sans text-foreground">
       <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
+        <h1 className="text-3xl font-extrabold text-foreground mb-2">
           🧠 Interview Preparation Suite
         </h1>
-        <p className="text-base text-slate-500">
-          Tailored technical questions, behavioral frameworks, coding topics, and system design concepts for <strong className="text-slate-800">{prep.targetRole}</strong>.
+        <p className="text-base text-muted">
+          Tailored technical questions, behavioral frameworks, coding topics, and system design concepts for <strong className="text-foreground">{prep.targetRole}</strong>.
         </p>
       </header>
 
       {/* Tabs Header */}
-      <div className="flex gap-4 border-b-2 border-slate-200 mb-8 overflow-x-auto pb-px">
+      <div className="flex gap-4 border-b-2 border-border mb-8 overflow-x-auto pb-px">
         {[
           { id: 'technical', label: '💻 Technical Questions' },
           { id: 'behavioral', label: '🗣️ Behavioral (STAR)' },
@@ -64,7 +65,7 @@ const InterviewPreparation = () => {
             className={`px-5 py-3 text-sm font-bold whitespace-nowrap transition-colors border-b-4 -mb-[2px] ${
               activeTab === tab.id 
                 ? 'text-blue-600 border-blue-600' 
-                : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'
+                : 'text-muted border-transparent hover:text-foreground hover:border-border'
             }`}
           >
             {tab.label}
@@ -76,26 +77,26 @@ const InterviewPreparation = () => {
       {activeTab === 'technical' && (
         <div className="flex flex-col gap-5">
           {prep.technicalQuestions.map((q, idx) => (
-            <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+            <div key={idx} className="bg-surface p-6 rounded-2xl border border-border shadow-sm hover:shadow-md transition-shadow">
               <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
                 <span className="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
                   {q.topic}
                 </span>
                 <button
                   onClick={() => toggleExpand(idx)}
-                  className="bg-slate-100 text-slate-600 hover:bg-slate-200 px-4 py-1.5 rounded-lg text-xs font-bold transition-colors"
+                  className="bg-surface-hover text-muted hover:bg-surface-hover px-4 py-1.5 rounded-lg text-xs font-bold transition-colors"
                 >
                   {expandedIndex === idx ? 'Hide Solution Hint' : 'Show Solution Hint'}
                 </button>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 m-0 leading-snug">
+              <h3 className="text-lg font-bold text-foreground m-0 leading-snug">
                 {q.question}
               </h3>
 
               {expandedIndex === idx && (
                 <div className="mt-5 bg-blue-50 p-4 rounded-xl border-l-4 border-blue-500">
-                  <p className="m-0 text-sm text-slate-700 leading-relaxed">
-                    💡 <strong className="text-slate-900">Answer Key & Key Concepts: </strong>{q.hint}
+                  <p className="m-0 text-sm text-muted leading-relaxed">
+                    💡 <strong className="text-foreground">Answer Key & Key Concepts: </strong>{q.hint}
                   </p>
                 </div>
               )}
@@ -108,15 +109,15 @@ const InterviewPreparation = () => {
       {activeTab === 'behavioral' && (
         <div className="flex flex-col gap-5">
           {prep.behavioralQuestions.map((q, idx) => (
-            <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <div key={idx} className="bg-surface p-6 rounded-2xl border border-border shadow-sm">
               <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full inline-block mb-4">
                 {q.topic}
               </span>
-              <h3 className="text-lg font-bold text-slate-900 m-0 mb-4 leading-snug">
+              <h3 className="text-lg font-bold text-foreground m-0 mb-4 leading-snug">
                 {q.question}
               </h3>
-              <p className="m-0 text-sm text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-100 leading-relaxed">
-                🎯 <strong className="text-slate-900">STAR Method Approach: </strong>{q.hint}
+              <p className="m-0 text-sm text-muted bg-surface-hover p-4 rounded-xl border border-border leading-relaxed">
+                🎯 <strong className="text-foreground">STAR Method Approach: </strong>{q.hint}
               </p>
             </div>
           ))}
@@ -125,13 +126,13 @@ const InterviewPreparation = () => {
 
       {/* Tab 3: Coding Topics */}
       {activeTab === 'coding' && (
-        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 className="text-xl font-extrabold text-slate-900 mb-6">
+        <div className="bg-surface p-8 rounded-2xl border border-border shadow-sm">
+          <h3 className="text-xl font-extrabold text-foreground mb-6">
             Top 100 Codeforces / LeetCode Must-Master Topics
           </h3>
-          <ul className="m-0 pl-6 text-base text-slate-600 leading-loose list-disc marker:text-blue-500">
+          <ul className="m-0 pl-6 text-base text-muted leading-loose list-disc marker:text-blue-500">
             {prep.codingTopics.map((topic, idx) => (
-              <li key={idx}><strong className="text-slate-800">{topic}</strong></li>
+              <li key={idx}><strong className="text-foreground">{topic}</strong></li>
             ))}
           </ul>
         </div>
@@ -139,13 +140,13 @@ const InterviewPreparation = () => {
 
       {/* Tab 4: System Design */}
       {activeTab === 'systemDesign' && (
-        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 className="text-xl font-extrabold text-slate-900 mb-6">
+        <div className="bg-surface p-8 rounded-2xl border border-border shadow-sm">
+          <h3 className="text-xl font-extrabold text-foreground mb-6">
             High-Scale System Design Interview Architecture Topics
           </h3>
-          <ul className="m-0 pl-6 text-base text-slate-600 leading-loose list-disc marker:text-emerald-500">
+          <ul className="m-0 pl-6 text-base text-muted leading-loose list-disc marker:text-emerald-500">
             {prep.systemDesignTopics.map((topic, idx) => (
-              <li key={idx}><strong className="text-slate-800">{topic}</strong></li>
+              <li key={idx}><strong className="text-foreground">{topic}</strong></li>
             ))}
           </ul>
         </div>

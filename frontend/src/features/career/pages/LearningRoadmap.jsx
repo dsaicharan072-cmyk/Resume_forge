@@ -25,13 +25,13 @@ const LearningRoadmap = () => {
   const roadmapSteps = roadmapData?.roadmap || [];
 
   return (
-    <div className="p-8 max-w-6xl mx-auto font-sans text-slate-900">
+    <div className="p-8 max-w-6xl mx-auto font-sans text-foreground">
       <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
+          <h1 className="text-3xl font-extrabold text-foreground mb-2">
             🗺️ Personalised Learning Roadmap
           </h1>
-          <p className="text-base text-slate-500">
+          <p className="text-base text-muted">
             Curated documentation, video courses, and hands-on projects tailored to bridge your skill gaps.
           </p>
         </div>
@@ -51,7 +51,7 @@ const LearningRoadmap = () => {
         {roadmapSteps.map((step, idx) => (
           <div
             key={idx}
-            className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm"
+            className="bg-surface rounded-2xl border border-border p-8 shadow-sm"
           >
             {/* Step Header */}
             <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
@@ -60,11 +60,11 @@ const LearningRoadmap = () => {
                   {idx + 1}
                 </div>
                 <div>
-                  <h2 className="text-2xl font-extrabold text-slate-900 m-0">
+                  <h2 className="text-2xl font-extrabold text-foreground m-0">
                     {step.skill} Roadmap
                   </h2>
-                  <span className="text-sm text-slate-500">
-                    Difficulty: <strong className="text-slate-700">{step.difficulty}</strong> • Est. Duration: <strong className="text-slate-700">{step.estimatedTime}</strong>
+                  <span className="text-sm text-muted">
+                    Difficulty: <strong className="text-muted">{step.difficulty}</strong> • Est. Duration: <strong className="text-muted">{step.estimatedTime}</strong>
                   </span>
                 </div>
               </div>
@@ -80,8 +80,8 @@ const LearningRoadmap = () => {
 
             {/* AI Explanation Banner */}
             <div className="bg-blue-50 p-4 rounded-xl mb-8 border-l-4 border-blue-500">
-              <p className="m-0 text-sm text-slate-700 leading-relaxed">
-                🤖 <strong className="text-slate-900">Why This Matters: </strong>
+              <p className="m-0 text-sm text-muted leading-relaxed">
+                🤖 <strong className="text-foreground">Why This Matters: </strong>
                 {step.aiExplanation}
               </p>
             </div>
@@ -89,11 +89,11 @@ const LearningRoadmap = () => {
             {/* Resource Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {/* Official Docs */}
-              <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 hover:shadow-md transition-shadow">
+              <div className="bg-surface-hover p-5 rounded-xl border border-border hover:shadow-md transition-shadow">
                 <span className="text-xs text-blue-600 font-extrabold uppercase tracking-wider">
                   📖 Official Docs
                 </span>
-                <h4 className="text-base font-bold text-slate-900 mt-2 mb-4">
+                <h4 className="text-base font-bold text-foreground mt-2 mb-4">
                   {step.resources.officialDocs.title}
                 </h4>
                 <a
@@ -107,11 +107,11 @@ const LearningRoadmap = () => {
               </div>
 
               {/* YouTube Tutorial */}
-              <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 hover:shadow-md transition-shadow">
+              <div className="bg-surface-hover p-5 rounded-xl border border-border hover:shadow-md transition-shadow">
                 <span className="text-xs text-red-500 font-extrabold uppercase tracking-wider">
                   📺 Video Course
                 </span>
-                <h4 className="text-base font-bold text-slate-900 mt-2 mb-4">
+                <h4 className="text-base font-bold text-foreground mt-2 mb-4">
                   {step.resources.youtubeTutorial.title}
                 </h4>
                 <a
@@ -125,14 +125,14 @@ const LearningRoadmap = () => {
               </div>
 
               {/* Practice Project */}
-              <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 hover:shadow-md transition-shadow">
+              <div className="bg-surface-hover p-5 rounded-xl border border-border hover:shadow-md transition-shadow">
                 <span className="text-xs text-emerald-600 font-extrabold uppercase tracking-wider">
                   🛠️ Practice Project
                 </span>
-                <h4 className="text-base font-bold text-slate-900 mt-2 mb-3">
+                <h4 className="text-base font-bold text-foreground mt-2 mb-3">
                   {step.resources.practiceProject.title}
                 </h4>
-                <span className="text-xs text-slate-500 block">
+                <span className="text-xs text-muted block">
                   Est. Time: {step.resources.practiceProject.estimatedHours} Hours • Resume Value: <strong className="text-emerald-600">High</strong>
                 </span>
               </div>

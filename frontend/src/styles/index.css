@@ -4,19 +4,19 @@
 
 @layer base {
   :root {
-    --background: #f8fafc;
-    --foreground: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
+    --background: #09090b;
+    --foreground: #f8fafc;
+    --muted: #a1a1aa;
+    --border: #27272a;
     --primary: #3b82f6;
     --primary-hover: #2563eb;
-    --surface: #ffffff;
-    --surface-hover: #f1f5f9;
+    --surface: #18181b;
+    --surface-hover: #27272a;
     --radius: 0.5rem;
   }
 
   body {
-    @apply bg-background text-slate-900 font-sans antialiased overflow-x-hidden;
+    @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
   }
 }
 
@@ -31,11 +31,11 @@
   }
 
   .btn-secondary {
-    @apply bg-surface border border-border text-slate-900 hover:bg-surface-hover;
+    @apply bg-surface border border-border text-foreground hover:bg-surface-hover;
   }
 
   /* Reusable Cards */
   .card {
-    @apply rounded-xl border border-border bg-surface text-slate-900 shadow-sm overflow-hidden;
+    @apply rounded-xl border border-border bg-surface text-foreground shadow-sm overflow-hidden;
   }
 }
