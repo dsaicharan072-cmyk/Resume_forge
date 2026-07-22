@@ -1,7 +1,9 @@
+import { apiUrl } from '../../services/apiUrl';
+
 export const uploadResume = async (file) => {
   const formData = new FormData();
   formData.append('resume', file);
-  const response = await fetch('/api/resume/upload', {
+  const response = await fetch(apiUrl('/api/resume/upload'), {
     method: 'POST',
     body: formData,
   });
@@ -13,7 +15,7 @@ export const uploadResume = async (file) => {
 };
 
 export const analyzeResume = async ({ resumeId, jobDescription }) => {
-  const response = await fetch('/api/resume/analyze', {
+  const response = await fetch(apiUrl('/api/resume/analyze'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ resumeId, jobDescription }),
@@ -26,7 +28,7 @@ export const analyzeResume = async ({ resumeId, jobDescription }) => {
 };
 
 export const rewriteBullets = async (bullets) => {
-  const response = await fetch('/api/resume/rewrite', {
+  const response = await fetch(apiUrl('/api/resume/rewrite'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ bullets }),
@@ -39,7 +41,7 @@ export const rewriteBullets = async (bullets) => {
 };
 
 export const createResumeVersion = async ({ resumeId, versionName, parsedData }) => {
-  const response = await fetch('/api/resume/version', {
+  const response = await fetch(apiUrl('/api/resume/version'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ resumeId, versionName, parsedData }),
@@ -52,7 +54,7 @@ export const createResumeVersion = async ({ resumeId, versionName, parsedData })
 };
 
 export const getResumeVersions = async (resumeId) => {
-  const response = await fetch(`/api/resume/${resumeId}/versions`);
+  const response = await fetch(apiUrl(`/api/resume/${resumeId}/versions`));
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || 'Failed to fetch resume versions');

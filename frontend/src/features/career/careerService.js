@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { apiUrl } from '../../services/apiUrl';
 
-const API_BASE = '/api/career';
+const API_BASE = apiUrl('/api/career');
 
 async function fetchCompanyMatch(payload) {
   const response = await fetch(`${API_BASE}/match`, {

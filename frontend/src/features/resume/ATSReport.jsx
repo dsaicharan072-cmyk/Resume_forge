@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { apiUrl } from '../../services/apiUrl';
 
 const fetchAnalysis = async (id) => {
-  const res = await fetch(`/api/resume/${id}/analysis`);
+  const res = await fetch(apiUrl(`/api/resume/${id}/analysis`));
   if (!res.ok) {
     const err = await res.json();
     throw new Error(err.message || "Failed to fetch analysis");

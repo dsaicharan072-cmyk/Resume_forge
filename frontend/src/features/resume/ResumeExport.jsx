@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { apiUrl } from '../../services/apiUrl';
 
 const ResumeExport = () => {
   const [id, setId] = useState("");
@@ -16,7 +17,7 @@ const ResumeExport = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/resume/export', {
+      const response = await fetch(apiUrl('/api/resume/export'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: id.trim(), type: idType, format })
