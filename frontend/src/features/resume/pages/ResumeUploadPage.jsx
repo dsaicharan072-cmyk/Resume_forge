@@ -15,8 +15,9 @@ const ResumeUploadPage = () => {
     if (!file) return;
     
     uploadResume(file, {
-      onSuccess: (data) => {
-        navigate(`/resume/analyze?id=${data._id || data.id}`);
+      onSuccess: (response) => {
+        const resumeData = response.data || response;
+        navigate(`/resume/analyze?id=${resumeData._id || resumeData.id}`);
       }
     });
   };
