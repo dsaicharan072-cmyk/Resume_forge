@@ -6,10 +6,10 @@ export const useUploadResume = () => {
   return useMutation({
     mutationFn: resumeService.uploadResume,
     onSuccess: () => {
-      toast.success('Resume analyzed successfully!');
+      toast.success('Resume uploaded. Preparing your analysis…');
     },
     onError: (error) => {
-      toast.error(error.message || 'Failed to upload resume');
+      toast.error(error.response?.data?.error || error.message || 'Failed to upload resume');
     }
   });
 };
