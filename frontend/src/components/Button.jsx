@@ -7,9 +7,9 @@ export const Button = forwardRef(
     
     const variants = {
       primary: "bg-primary text-white hover:bg-primary-hover shadow-glow",
-      secondary: "bg-surface border border-border text-white hover:bg-surface-hover",
-      outline: "border border-border bg-transparent text-white hover:bg-surface",
-      ghost: "bg-transparent text-white hover:bg-surface hover:text-white",
+      secondary: "bg-surface border border-border text-slate-900 hover:bg-surface-hover",
+      outline: "border border-border bg-transparent text-slate-900 hover:bg-surface",
+      ghost: "bg-transparent text-slate-600 hover:bg-surface hover:text-slate-900",
     };
 
     const sizes = {
@@ -38,3 +38,5 @@ export const Button = forwardRef(
   }
 );
 Button.displayName = "Button";
+
+export default Button;

@@ -13,7 +13,7 @@ const navItems = [
 
 export default function MainLayout() {
   return (
-    <div className="flex h-screen bg-background text-white overflow-hidden">
+    <div className="flex h-screen bg-background text-slate-900 overflow-hidden">
       {/* Sidebar Mock */}
       <aside className="w-64 flex-shrink-0 border-r border-border bg-surface hidden md:flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-border">
@@ -22,15 +22,15 @@ export default function MainLayout() {
         <div className="flex-1 overflow-y-auto py-4 px-4">
           <div className="space-y-1">
             {/* Nav items will go here */}
-            <NavLink to="/dashboard" className={({isActive}) => `h-10 rounded-md flex items-center px-3 text-sm font-medium transition-colors ${isActive ? 'bg-surface-hover text-white' : 'text-muted hover:text-white hover:bg-surface-hover'}`}>Dashboard</NavLink>
-            <NavLink to="/resume" className={({isActive}) => `h-10 rounded-md flex items-center px-3 text-sm font-medium transition-colors ${isActive ? 'bg-surface-hover text-white' : 'text-muted hover:text-white hover:bg-surface-hover'}`}>Resume</NavLink>
+            <NavLink to="/dashboard" className={({isActive}) => `h-10 rounded-md flex items-center px-3 text-sm font-medium transition-colors ${isActive ? 'bg-surface-hover text-slate-900 font-semibold' : 'text-muted hover:text-slate-900 hover:bg-surface-hover'}`}>Dashboard</NavLink>
+            <NavLink to="/resume" className={({isActive}) => `h-10 rounded-md flex items-center px-3 text-sm font-medium transition-colors ${isActive ? 'bg-surface-hover text-slate-900 font-semibold' : 'text-muted hover:text-slate-900 hover:bg-surface-hover'}`}>Resume</NavLink>
             
             <div className="pt-4 pb-2 text-xs font-bold text-muted uppercase tracking-wider px-3">Career OS</div>
             {navItems.map((item) => (
               <NavLink 
                 key={item.path}
                 to={item.path} 
-                className={({isActive}) => `h-10 rounded-md flex items-center px-3 text-sm font-medium transition-colors gap-2 ${isActive ? 'bg-surface-hover text-white' : 'text-muted hover:text-white hover:bg-surface-hover'}`}
+                className={({isActive}) => `h-10 rounded-md flex items-center px-3 text-sm font-medium transition-colors gap-2 ${isActive ? 'bg-surface-hover text-slate-900 font-semibold' : 'text-muted hover:text-slate-900 hover:bg-surface-hover'}`}
               >
                 <span>{item.icon}</span>
                 {item.label}

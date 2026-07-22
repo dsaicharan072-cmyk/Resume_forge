@@ -1,80 +1,32 @@
 import React, { useState } from 'react';
-
-const DEFAULT_JOBS_FEED = [
-  {
-    id: 'job_1',
-    company: 'Atlassian',
-    role: 'Senior Full Stack Engineer (React / Node)',
-    location: 'Remote / Hybrid',
-    salary: '$145,000 - $185,000',
-    applyLink: 'https://atlassian.com/careers/job-101',
-    requiredSkills: ['React', 'Node.js', 'TypeScript', 'REST APIs'],
-    matchedSkills: ['React', 'Node.js', 'TypeScript', 'REST APIs'],
-    matchScore: 95
-  },
-  {
-    id: 'job_2',
-    company: 'Microsoft',
-    role: 'Software Development Engineer II',
-    location: 'Redmond, WA / Remote',
-    salary: '$150,000 - $190,000',
-    applyLink: 'https://careers.microsoft.com/job-202',
-    requiredSkills: ['TypeScript', 'React', 'Node.js', 'System Design'],
-    matchedSkills: ['TypeScript', 'React', 'Node.js'],
-    matchScore: 91
-  },
-  {
-    id: 'job_3',
-    company: 'Amazon',
-    role: 'Software Development Engineer - AWS',
-    location: 'Seattle, WA',
-    salary: '$140,000 - $175,000',
-    applyLink: 'https://amazon.jobs/job-303',
-    requiredSkills: ['Java', 'Node.js', 'AWS', 'Distributed Systems'],
-    matchedSkills: ['Node.js'],
-    matchScore: 86
-  },
-  {
-    id: 'job_4',
-    company: 'Adobe',
-    role: 'Frontend Engineer (Creative Cloud)',
-    location: 'San Jose, CA',
-    salary: '$135,000 - $170,000',
-    applyLink: 'https://adobe.com/careers/job-404',
-    requiredSkills: ['JavaScript', 'React', 'HTML5', 'CSS3'],
-    matchedSkills: ['React', 'JavaScript'],
-    matchScore: 84
-  }
-];
+import { useLiveJobs } from '../careerService';
 
 const LiveJobs = () => {
   const [minScore, setMinScore] = useState(70);
-  const [jobs] = useState(DEFAULT_JOBS_FEED);
-
-  const filteredJobs = jobs.filter(job => job.matchScore >= minScore);
+  const { data: jobs, isPending, isError } = useLiveJobs(minScore);
 
   const getScoreColor = (score) => {
-    if (score >= 90) return '#10B981';
-    if (score >= 80) return '#3B82F6';
-    return '#F59E0B';
+    if (score >= 90) return '#10B981'; // Emerald
+    if (score >= 80) return '#3B82F6'; // Blue
+    return '#F59E0B'; // Amber
   };
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1100px', margin: '0 auto', fontFamily: 'Inter, system-ui, sans-serif', color: '#1E293B' }}>
-      <header style={{ marginBottom: '32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div className="p-8 max-w-6xl mx-auto font-sans text-slate-900">
+      <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 style={{ fontSize: '32px', fontWeight: '800', color: '#0F172A', marginBottom: '8px' }}>
+          <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
             📡 Live Hiring Opportunities
           </h1>
-          <p style={{ fontSize: '16px', color: '#64748B' }}>
+          <p className="text-base text-slate-500">
             Public hiring feed automatically filtered and scored against your resume standards.
           </p>
         </div>
 
         {/* Configurable Min Match Score Slider */}
-        <div style={{ background: '#FFFFFF', padding: '16px 20px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-          <label style={{ fontSize: '13px', fontWeight: '700', color: '#475569', display: 'block', marginBottom: '6px' }}>
-            Min Match Threshold: <strong style={{ color: '#2563EB' }}>{minScore}%</strong>
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm min-w-[240px]">
+          <label className="text-sm font-bold text-slate-600 block mb-3">
+            Min Match Threshold: <strong className="text-blue-600 ml-1">{minScore}%</strong>
           </label>
           <input
             type="range"
@@ -83,100 +35,100 @@ const LiveJobs = () => {
             step="5"
             value={minScore}
             onChange={(e) => setMinScore(Number(e.target.value))}
-            style={{ width: '180px', cursor: 'pointer' }}
+            className="w-full cursor-pointer accent-blue-600"
           />
         </div>
       </header>
 
+      {isPending && (
+        <div className="flex justify-center items-center min-h-[400px]">
+          <p className="text-primary font-bold animate-pulse">Scanning live job boards...</p>
+        </div>
+      )}
+
+      {isError && (
+        <div className="text-center text-red-500 p-8">
+          Failed to fetch live job feed. Please try again.
+        </div>
+      )}
+
       {/* Jobs Feed List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {filteredJobs.map((job) => {
-          const color = getScoreColor(job.matchScore);
-
-          return (
-            <div
-              key={job.id}
-              style={{
-                background: '#FFFFFF',
-                borderRadius: '16px',
-                border: '1px solid #E2E8F0',
-                padding: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
-                transition: 'transform 0.2s ease'
-              }}
-            >
-              <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-                <div style={{ width: '52px', height: '52px', borderRadius: '12px', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '20px', color: '#334155' }}>
-                  {job.company.charAt(0)}
-                </div>
-
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-                    <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#0F172A', margin: 0 }}>
-                      {job.role}
-                    </h3>
-                    <span style={{ fontSize: '12px', fontWeight: '700', color: '#64748B', background: '#F1F5F9', padding: '2px 8px', borderRadius: '8px' }}>
-                      {job.company}
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '16px', fontSize: '13px', color: '#64748B', marginBottom: '14px' }}>
-                    <span>📍 {job.location}</span>
-                    <span>💰 {job.salary}</span>
-                  </div>
-
-                  {/* Skills Chips */}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                    {job.requiredSkills.map((skill, sIdx) => {
-                      const isMatched = job.matchedSkills.includes(skill);
-                      return (
-                        <span key={sIdx} style={{
-                          background: isMatched ? '#ECFDF5' : '#F1F5F9',
-                          color: isMatched ? '#047857' : '#64748B',
-                          border: isMatched ? '1px solid #A7F3D0' : '1px solid #E2E8F0',
-                          padding: '3px 8px',
-                          borderRadius: '12px',
-                          fontSize: '11px',
-                          fontWeight: '600'
-                        }}>
-                          {skill} {isMatched ? '✓' : ''}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}>
-                <div style={{ background: `${color}15`, color: color, padding: '6px 14px', borderRadius: '16px', fontSize: '18px', fontWeight: '800' }}>
-                  {job.matchScore}% Match
-                </div>
-
-                <a
-                  href={job.applyLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    background: '#2563EB',
-                    color: '#FFFFFF',
-                    padding: '8px 18px',
-                    borderRadius: '8px',
-                    fontSize: '13px',
-                    fontWeight: '700',
-                    textDecoration: 'none',
-                    display: 'inline-block'
-                  }}
-                >
-                  Apply Now →
-                </a>
-              </div>
+      {!isPending && !isError && jobs && (
+        <div className="flex flex-col gap-5">
+          {jobs.length === 0 ? (
+            <div className="bg-slate-50 p-10 text-center rounded-2xl border border-slate-200">
+              <p className="text-slate-500 font-medium">No jobs found matching your minimum score threshold.</p>
             </div>
-          );
-        })}
-      </div>
+          ) : (
+            jobs.map((job) => {
+              const color = getScoreColor(job.matchScore);
+
+              return (
+                <div
+                  key={job.id}
+                  className="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col md:flex-row md:items-center justify-between shadow-sm hover:shadow-md transition-shadow gap-6"
+                >
+                  <div className="flex gap-5 items-start">
+                    <div className="w-14 h-14 shrink-0 rounded-xl bg-slate-100 flex items-center justify-center font-extrabold text-xl text-slate-700">
+                      {job.company.charAt(0)}
+                    </div>
+
+                    <div>
+                      <div className="flex flex-wrap items-center gap-3 mb-1">
+                        <h3 className="text-xl font-extrabold text-slate-900 m-0">
+                          {job.role}
+                        </h3>
+                        <span className="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full">
+                          {job.company}
+                        </span>
+                      </div>
+
+                      <div className="flex gap-4 text-sm font-medium text-slate-500 mb-4">
+                        <span>📍 {job.location}</span>
+                        <span>💰 {job.salary}</span>
+                      </div>
+
+                      {/* Skills Chips */}
+                      <div className="flex flex-wrap gap-2">
+                        {job.requiredSkills.map((skill, sIdx) => {
+                          const isMatched = job.matchedSkills.includes(skill);
+                          return (
+                            <span key={sIdx} className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                              isMatched 
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                                : 'bg-slate-50 text-slate-500 border-slate-200'
+                            }`}>
+                              {skill} {isMatched ? '✓' : ''}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-4 shrink-0">
+                    <div 
+                      className="px-4 py-2 rounded-full text-lg font-extrabold"
+                      style={{ background: `${color}15`, color: color }}
+                    >
+                      {job.matchScore}% Match
+                    </div>
+
+                    <a
+                      href={job.applyLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold no-underline inline-block transition-colors"
+                    >
+                      Apply Now →
+                    </a>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
     </div>
   );
 };

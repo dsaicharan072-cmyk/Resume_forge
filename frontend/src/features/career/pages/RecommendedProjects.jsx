@@ -1,105 +1,101 @@
 import React, { useState } from 'react';
-
-const DEFAULT_PROJECTS = [
-  {
-    title: 'Dockerized Microservices Expense Tracker',
-    skill: 'Docker',
-    difficulty: 'Intermediate',
-    estimatedTime: '8 Hours',
-    resumeValue: 'High',
-    techStack: ['Docker', 'Node.js', 'Express', 'MongoDB', 'Nginx'],
-    employabilityExplanation: 'Demonstrates your ability to containerize multi-tier applications, configure Nginx reverse proxies, and solve real-world environment consistency problems that production engineering teams face.'
-  },
-  {
-    title: 'Serverless REST API & File Processing Pipeline',
-    skill: 'AWS',
-    difficulty: 'Intermediate',
-    estimatedTime: '10 Hours',
-    resumeValue: 'High',
-    techStack: ['AWS Lambda', 'API Gateway', 'S3', 'DynamoDB', 'Node.js'],
-    employabilityExplanation: 'Proves hands-on competence with cloud-native serverless architecture, event-driven computing, and cloud database optimization.'
-  },
-  {
-    title: 'High-Throughput Distributed Rate Limiter & URL Shortener',
-    skill: 'System Design',
-    difficulty: 'Advanced',
-    estimatedTime: '14 Hours',
-    resumeValue: 'High',
-    techStack: ['Node.js', 'Redis', 'PostgreSQL', 'Docker', 'Locust'],
-    employabilityExplanation: 'Validates your mastery of sliding-window algorithms, in-memory caching strategies, rate-limiting headers, and database partitioning under peak load.'
-  }
-];
+import { useLearningRoadmap } from '../careerService';
 
 const RecommendedProjects = () => {
-  const [projects] = useState(DEFAULT_PROJECTS);
+  const [missingSkills] = useState(['Docker', 'AWS', 'System Design']); // Fallback skills
+  const { data, isPending, isError } = useLearningRoadmap(missingSkills.join(','));
+
+  if (isPending) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <p className="text-primary font-bold animate-pulse">Curating practice projects...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="text-center text-red-500 p-8">
+        Failed to load recommended projects. Please try again.
+      </div>
+    );
+  }
+
+  // Extract projects from the roadmap data
+  const projects = data?.roadmap?.map(step => ({
+    skill: step.skill,
+    ...step.resources.practiceProject,
+    employabilityExplanation: step.aiExplanation,
+    techStack: [step.skill] // Could be expanded by AI in the future, fallback to the core skill
+  })) || [];
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1100px', margin: '0 auto', fontFamily: 'Inter, system-ui, sans-serif', color: '#1E293B' }}>
-      <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: '800', color: '#0F172A', marginBottom: '8px' }}>
+    <div className="p-8 max-w-6xl mx-auto font-sans text-slate-900">
+      <header className="mb-8">
+        <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
           🚀 Recommended Practice Projects
         </h1>
-        <p style={{ fontSize: '16px', color: '#64748B' }}>
+        <p className="text-base text-slate-500">
           Build high-value portfolio projects specifically engineered to demonstrate missing production skills on your resume.
         </p>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '24px' }}>
-        {projects.map((project, idx) => (
-          <div
-            key={idx}
-            style={{
-              background: '#FFFFFF',
-              borderRadius: '16px',
-              border: '1px solid #E2E8F0',
-              padding: '24px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-              <div>
-                <span style={{ fontSize: '12px', fontWeight: '800', color: '#2563EB', background: '#EFF6FF', padding: '4px 12px', borderRadius: '12px', textTransform: 'uppercase' }}>
-                  Bridges Gap: {project.skill}
-                </span>
-                <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#0F172A', marginTop: '8px', margin: 0 }}>
-                  {project.title}
-                </h2>
-              </div>
-
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <span style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '6px 12px', borderRadius: '20px', fontSize: '13px', fontWeight: '600', color: '#475569' }}>
-                  ⏱️ {project.estimatedTime}
-                </span>
-                <span style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', padding: '6px 12px', borderRadius: '20px', fontSize: '13px', fontWeight: '700', color: '#047857' }}>
-                  Resume Value: {project.resumeValue}
-                </span>
-              </div>
-            </div>
-
-            {/* Employability Explanation */}
-            <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '10px', marginBottom: '20px', borderLeft: '4px solid #10B981' }}>
-              <p style={{ margin: 0, fontSize: '14px', color: '#334155', lineHeight: '1.6' }}>
-                💡 <strong style={{ color: '#1E293B' }}>Why building this improves employability: </strong>
-                {project.employabilityExplanation}
-              </p>
-            </div>
-
-            {/* Tech Stack Chips */}
-            <div>
-              <h4 style={{ fontSize: '13px', fontWeight: '700', color: '#64748B', marginBottom: '8px', textTransform: 'uppercase' }}>
-                Technologies You Will Master
-              </h4>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {project.techStack.map((tech, tIdx) => (
-                  <span key={tIdx} style={{ background: '#F1F5F9', color: '#334155', border: '1px solid #CBD5E1', padding: '4px 10px', borderRadius: '14px', fontSize: '12px', fontWeight: '600' }}>
-                    {tech}
+      {projects.length === 0 ? (
+        <div className="bg-slate-50 p-10 text-center rounded-2xl border border-slate-200">
+          <p className="text-slate-500 font-medium">No recommended projects at this time.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6">
+          {projects.map((project, idx) => (
+            <div
+              key={idx}
+              className="bg-white rounded-2xl border border-slate-200 p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                <div>
+                  <span className="text-xs font-extrabold text-blue-700 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-wider">
+                    Bridges Gap: {project.skill}
                   </span>
-                ))}
+                  <h2 className="text-2xl font-extrabold text-slate-900 mt-3 m-0">
+                    {project.title}
+                  </h2>
+                </div>
+
+                <div className="flex gap-3 items-center shrink-0">
+                  <span className="bg-slate-50 border border-slate-200 px-4 py-2 rounded-full text-sm font-bold text-slate-600">
+                    ⏱️ {project.estimatedHours} Hours
+                  </span>
+                  <span className="bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-full text-sm font-bold text-emerald-700">
+                    Resume Value: {project.resumeValue}
+                  </span>
+                </div>
+              </div>
+
+              {/* Employability Explanation */}
+              <div className="bg-slate-50 p-5 rounded-xl mb-6 border-l-4 border-emerald-500">
+                <p className="m-0 text-sm text-slate-700 leading-relaxed">
+                  💡 <strong className="text-slate-900">Why building this improves employability: </strong>
+                  {project.employabilityExplanation}
+                </p>
+              </div>
+
+              {/* Tech Stack Chips */}
+              <div>
+                <h4 className="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">
+                  Technologies You Will Master
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {project.techStack.map((tech, tIdx) => (
+                    <span key={tIdx} className="bg-white text-slate-700 border border-slate-300 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

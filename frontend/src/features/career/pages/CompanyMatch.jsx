@@ -1,103 +1,25 @@
-import React, { useState } from 'react';
-
-// Default mock data for instant preview & demonstration
-const DEFAULT_MATCHES = [
-  {
-    companyId: 'atlassian',
-    companyName: 'Atlassian',
-    logo: 'https://logo.clearbit.com/atlassian.com',
-    domain: 'Enterprise Software & Productivity',
-    score: 95,
-    reasons: {
-      strongFit: [
-        'Matches core requirement stack: React, Node.js, TypeScript, REST APIs',
-        'Possesses bonus stack skills: GraphQL, Docker',
-        'Meets or exceeds minimum required experience.'
-      ],
-      gaps: ['Missing preferred skills: Jest, CI/CD.'],
-      summary: 'Score of 95% based on 4/6 core skills match and experience alignment.'
-    },
-    matchedSkills: ['React', 'Node.js', 'TypeScript', 'REST APIs', 'GraphQL', 'Docker'],
-    missingSkills: ['Jest', 'CI/CD']
-  },
-  {
-    companyId: 'microsoft',
-    companyName: 'Microsoft',
-    logo: 'https://logo.clearbit.com/microsoft.com',
-    domain: 'Cloud, OS, & AI',
-    score: 91,
-    reasons: {
-      strongFit: [
-        'Matches core requirement stack: TypeScript, React, Node.js',
-        'Possesses bonus stack skills: System Design, SQL',
-        'Meets or exceeds minimum required experience.'
-      ],
-      gaps: ['Missing key required skills: C#.', 'Missing preferred skills: Azure.'],
-      summary: 'Score of 91% based on 3/6 core skills match and experience alignment.'
-    },
-    matchedSkills: ['TypeScript', 'React', 'Node.js', 'System Design', 'SQL'],
-    missingSkills: ['C#', 'Azure']
-  },
-  {
-    companyId: 'amazon',
-    companyName: 'Amazon',
-    logo: 'https://logo.clearbit.com/amazon.com',
-    domain: 'E-commerce & Cloud Computing',
-    score: 86,
-    reasons: {
-      strongFit: [
-        'Matches core requirement stack: Node.js, Python',
-        'Possesses bonus stack skills: AWS, Microservices',
-        'Meets or exceeds minimum required experience.'
-      ],
-      gaps: ['Missing key required skills: Java, Distributed Systems.'],
-      summary: 'Score of 86% based on 2/6 core skills match and experience alignment.'
-    },
-    matchedSkills: ['Node.js', 'Python', 'AWS', 'Microservices'],
-    missingSkills: ['Java', 'Distributed Systems']
-  },
-  {
-    companyId: 'adobe',
-    companyName: 'Adobe',
-    logo: 'https://logo.clearbit.com/adobe.com',
-    domain: 'Creative & Digital Media Software',
-    score: 84,
-    reasons: {
-      strongFit: [
-        'Matches core requirement stack: JavaScript, React, HTML5, CSS3',
-        'Meets or exceeds minimum required experience.'
-      ],
-      gaps: ['Missing key required skills: C++, WebGL.', 'Missing preferred skills: WebAssembly.'],
-      summary: 'Score of 84% based on 4/6 core skills match and experience alignment.'
-    },
-    matchedSkills: ['JavaScript', 'React', 'HTML5', 'CSS3'],
-    missingSkills: ['C++', 'WebGL', 'WebAssembly']
-  },
-  {
-    companyId: 'google',
-    companyName: 'Google',
-    logo: 'https://logo.clearbit.com/google.com',
-    domain: 'Search, Cloud, & AI Infrastructure',
-    score: 82,
-    reasons: {
-      strongFit: [
-        'Matches core requirement stack: Python, Data Structures, Algorithms',
-        'Possesses bonus stack skills: GCP'
-      ],
-      gaps: [
-        'Missing key required skills: C++, Go, System Design.',
-        'Under minimum required experience by 1 year(s).'
-      ],
-      summary: 'Score of 82% based on 3/7 core skills match and experience alignment.'
-    },
-    matchedSkills: ['Python', 'Data Structures', 'Algorithms', 'GCP'],
-    missingSkills: ['C++', 'Go', 'System Design']
-  }
-];
+import React, { useState, useEffect } from 'react';
+import { useCompanyMatch } from '../careerService';
 
 const CompanyMatch = () => {
-  const [matches] = useState(DEFAULT_MATCHES);
-  const [selectedCompany, setSelectedCompany] = useState(DEFAULT_MATCHES[0]);
+  const { mutate: getMatches, data, isPending, isError } = useCompanyMatch();
+  const [selectedCompany, setSelectedCompany] = useState(null);
+
+  useEffect(() => {
+    // Fetch matches with a default fallback payload representing a standard user
+    getMatches({
+      profile: {
+        skills: ['React', 'Node.js', 'TypeScript', 'AWS'],
+        experienceYears: 2
+      }
+    });
+  }, [getMatches]);
+
+  useEffect(() => {
+    if (data?.matches?.length > 0) {
+      setSelectedCompany(data.matches[0]);
+    }
+  }, [data]);
 
   const getScoreColor = (score) => {
     if (score >= 90) return '#10B981'; // Emerald
@@ -106,22 +28,40 @@ const CompanyMatch = () => {
     return '#EF4444'; // Red
   };
 
+  if (isPending) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <p className="text-primary font-bold animate-pulse">Analyzing company matches...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="text-center text-red-500 p-8">
+        Failed to load company matches. Please try again.
+      </div>
+    );
+  }
+
+  const matches = data?.matches || [];
+
   return (
-    <div style={{ padding: '32px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'Inter, system-ui, sans-serif', color: '#1E293B' }}>
-      <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: '800', color: '#0F172A', marginBottom: '8px' }}>
+    <div className="p-8 max-w-7xl mx-auto font-sans text-slate-900">
+      <header className="mb-8">
+        <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
           🏢 Target Company Match Engine
         </h1>
-        <p style={{ fontSize: '16px', color: '#64748B' }}>
+        <p className="text-base text-slate-500">
           Deterministic algorithm matching your resume & profile against top tech company standards.
         </p>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Company List */}
         <div>
-          <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '16px' }}>Company Rankings</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <h2 className="text-xl font-bold mb-4">Company Rankings</h2>
+          <div className="flex flex-col gap-4">
             {matches.map((item) => {
               const isSelected = selectedCompany?.companyId === item.companyId;
               const color = getScoreColor(item.score);
@@ -130,34 +70,30 @@ const CompanyMatch = () => {
                 <div
                   key={item.companyId}
                   onClick={() => setSelectedCompany(item)}
+                  className={`flex items-center justify-between p-5 rounded-xl border cursor-pointer transition-all ${
+                    isSelected 
+                      ? 'bg-slate-50 border-transparent shadow-md' 
+                      : 'bg-white border-slate-200 hover:bg-slate-50'
+                  }`}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '20px',
-                    borderRadius: '12px',
-                    border: isSelected ? `2px solid ${color}` : '1px solid #E2E8F0',
-                    background: isSelected ? '#F8FAFC' : '#FFFFFF',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
+                    borderColor: isSelected ? color : undefined,
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '8px', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '18px', color: '#334155' }}>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center font-bold text-lg text-slate-700">
                       {item.companyName.charAt(0)}
                     </div>
                     <div>
-                      <h3 style={{ fontSize: '18px', fontWeight: '700', margin: 0, color: '#0F172A' }}>{item.companyName}</h3>
-                      <span style={{ fontSize: '13px', color: '#64748B' }}>{item.domain}</span>
+                      <h3 className="text-lg font-bold m-0 text-slate-900">{item.companyName}</h3>
+                      <span className="text-sm text-slate-500">{item.domain}</span>
                     </div>
                   </div>
 
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '28px', fontWeight: '800', color: color }}>
+                  <div className="text-right">
+                    <div className="text-2xl font-extrabold" style={{ color }}>
                       {item.score}%
                     </div>
-                    <span style={{ fontSize: '12px', color: '#94A3B8', fontWeight: '500' }}>Match Score</span>
+                    <span className="text-xs text-slate-400 font-medium">Match Score</span>
                   </div>
                 </div>
               );
@@ -167,62 +103,64 @@ const CompanyMatch = () => {
 
         {/* Selected Company Details */}
         {selectedCompany && (
-          <div style={{ background: '#FFFFFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
+            <div className="flex items-center justify-between mb-5">
               <div>
-                <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#0F172A', margin: 0 }}>
+                <h2 className="text-2xl font-extrabold text-slate-900 m-0">
                   {selectedCompany.companyName}
                 </h2>
-                <span style={{ fontSize: '14px', color: '#64748B' }}>{selectedCompany.domain}</span>
+                <span className="text-sm text-slate-500">{selectedCompany.domain}</span>
               </div>
-              <div style={{
-                background: `${getScoreColor(selectedCompany.score)}15`,
-                color: getScoreColor(selectedCompany.score),
-                padding: '8px 16px',
-                borderRadius: '20px',
-                fontSize: '20px',
-                fontWeight: '800'
-              }}>
+              <div 
+                className="px-4 py-2 rounded-full text-lg font-extrabold"
+                style={{
+                  background: `${getScoreColor(selectedCompany.score)}15`,
+                  color: getScoreColor(selectedCompany.score),
+                }}
+              >
                 {selectedCompany.score}% Match
               </div>
             </div>
 
-            <div style={{ marginBottom: '24px', padding: '16px', borderRadius: '8px', background: '#F8FAFC', borderLeft: `4px solid ${getScoreColor(selectedCompany.score)}` }}>
-              <p style={{ margin: 0, fontSize: '14px', color: '#334155', fontWeight: '500' }}>
+            <div 
+              className="mb-6 p-4 rounded-lg bg-slate-50 border-l-4"
+              style={{ borderLeftColor: getScoreColor(selectedCompany.score) }}
+            >
+              <p className="m-0 text-sm text-slate-700 font-medium">
                 {selectedCompany.reasons.summary}
               </p>
             </div>
 
             {/* Strong Fit Reasons */}
-            <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ fontSize: '15px', fontWeight: '700', color: '#10B981', marginBottom: '10px' }}>
+            <div className="mb-5">
+              <h4 className="text-sm font-bold text-emerald-500 mb-2">
                 ✅ Key Strengths & Fit
               </h4>
-              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', color: '#334155' }}>
+              <ul className="m-0 pl-5 text-sm text-slate-700 list-disc">
                 {selectedCompany.reasons.strongFit.map((reason, idx) => (
-                  <li key={idx} style={{ marginBottom: '6px' }}>{reason}</li>
+                  <li key={idx} className="mb-1">{reason}</li>
                 ))}
               </ul>
             </div>
 
             {/* Skill Gaps */}
-            <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ fontSize: '15px', fontWeight: '700', color: '#EF4444', marginBottom: '10px' }}>
+            <div className="mb-6">
+              <h4 className="text-sm font-bold text-red-500 mb-2">
                 ⚠️ Identified Gaps
               </h4>
-              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', color: '#334155' }}>
+              <ul className="m-0 pl-5 text-sm text-slate-700 list-disc">
                 {selectedCompany.reasons.gaps.map((reason, idx) => (
-                  <li key={idx} style={{ marginBottom: '6px' }}>{reason}</li>
+                  <li key={idx} className="mb-1">{reason}</li>
                 ))}
               </ul>
             </div>
 
             {/* Matched Skills Chips */}
-            <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ fontSize: '14px', fontWeight: '700', color: '#475569', marginBottom: '8px' }}>Matched Skills</h4>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            <div className="mb-5">
+              <h4 className="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Matched Skills</h4>
+              <div className="flex flex-wrap gap-2">
                 {selectedCompany.matchedSkills.map((skill, idx) => (
-                  <span key={idx} style={{ background: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0', padding: '4px 10px', borderRadius: '16px', fontSize: '12px', fontWeight: '600' }}>
+                  <span key={idx} className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
                     {skill}
                   </span>
                 ))}
@@ -231,10 +169,10 @@ const CompanyMatch = () => {
 
             {/* Missing Skills Chips */}
             <div>
-              <h4 style={{ fontSize: '14px', fontWeight: '700', color: '#475569', marginBottom: '8px' }}>Missing Skills</h4>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              <h4 className="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Missing Skills</h4>
+              <div className="flex flex-wrap gap-2">
                 {selectedCompany.missingSkills.map((skill, idx) => (
-                  <span key={idx} style={{ background: '#FEF2F2', color: '#991B1B', border: '1px solid #FECACA', padding: '4px 10px', borderRadius: '16px', fontSize: '12px', fontWeight: '600' }}>
+                  <span key={idx} className="bg-red-50 text-red-700 border border-red-200 px-3 py-1 rounded-full text-xs font-semibold">
                     {skill}
                   </span>
                 ))}

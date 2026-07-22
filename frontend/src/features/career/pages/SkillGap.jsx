@@ -1,114 +1,111 @@
-import React, { useState } from 'react';
-
-const DEFAULT_CANDIDATE_SKILLS = ['React', 'Node', 'MongoDB'];
-const DEFAULT_TARGET_JOB_SKILLS = ['React', 'Node', 'MongoDB', 'Docker', 'AWS', 'System Design'];
-
-const DEFAULT_ANALYSIS = {
-  presentSkills: ['React', 'Node', 'MongoDB'],
-  missingSkills: [
-    {
-      skill: 'Docker',
-      category: 'DevOps & Containerization',
-      priority: 'High',
-      whyItMatters: 'Essential for containerizing microservices and ensuring consistent environments across development and production.'
-    },
-    {
-      skill: 'AWS',
-      category: 'Cloud Infrastructure',
-      priority: 'High',
-      whyItMatters: 'Industry-standard cloud provider needed for deploying, scaling, and managing cloud-native applications.'
-    },
-    {
-      skill: 'System Design',
-      category: 'Architecture',
-      priority: 'High',
-      whyItMatters: 'Fundamental for designing fault-tolerant, low-latency distributed systems that scale to millions of users.'
-    }
-  ]
-};
+import React, { useState, useEffect } from 'react';
+import { useSkillGap } from '../careerService';
 
 const SkillGap = () => {
-  const [candidateSkills] = useState(DEFAULT_CANDIDATE_SKILLS);
-  const [targetJobSkills] = useState(DEFAULT_TARGET_JOB_SKILLS);
-  const [analysis] = useState(DEFAULT_ANALYSIS);
+  const { mutate: getSkillGap, data, isPending, isError } = useSkillGap();
+  const [candidateSkills] = useState(['React', 'Node', 'MongoDB']);
+  const [targetJobSkills] = useState(['React', 'Node', 'MongoDB', 'Docker', 'AWS', 'System Design']);
+
+  useEffect(() => {
+    // Fetch skill gap with fallback payload
+    getSkillGap({
+      candidateSkills,
+      targetRoleSkills: targetJobSkills,
+      targetRole: 'Senior Full Stack Engineer'
+    });
+  }, [getSkillGap, candidateSkills, targetJobSkills]);
 
   const getPriorityBadgeStyle = (priority) => {
     switch (priority) {
       case 'High':
-        return { background: '#FEF2F2', color: '#DC2626', border: '1px solid #FECACA' };
+        return 'bg-red-50 text-red-600 border-red-200';
       case 'Medium':
-        return { background: '#FFFBEB', color: '#D97706', border: '1px solid #FDE68A' };
+        return 'bg-amber-50 text-amber-600 border-amber-200';
       default:
-        return { background: '#F0FDF4', color: '#16A34A', border: '1px solid #BBF7D0' };
+        return 'bg-emerald-50 text-emerald-600 border-emerald-200';
     }
   };
 
+  if (isPending) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <p className="text-primary font-bold animate-pulse">Calculating skill gaps...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="text-center text-red-500 p-8">
+        Failed to calculate skill gap. Please try again.
+      </div>
+    );
+  }
+
+  const analysis = data || { presentSkills: [], missingSkills: [] };
+
   return (
-    <div style={{ padding: '32px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'Inter, system-ui, sans-serif', color: '#1E293B' }}>
-      <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: '800', color: '#0F172A', marginBottom: '8px' }}>
+    <div className="p-8 max-w-6xl mx-auto font-sans text-slate-900">
+      <header className="mb-8">
+        <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
           ⚡ Skill Gap Engine
         </h1>
-        <p style={{ fontSize: '16px', color: '#64748B' }}>
+        <p className="text-base text-slate-500">
           Deterministic algorithm comparing your current skills against target role standards to identify actionable missing skills.
         </p>
       </header>
 
       {/* Overview Metric Bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '32px' }}>
-        <div style={{ background: '#FFFFFF', padding: '20px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-          <span style={{ fontSize: '13px', color: '#64748B', fontWeight: '600' }}>Your Current Skills</span>
-          <div style={{ fontSize: '28px', fontWeight: '800', color: '#10B981', marginTop: '4px' }}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <span className="text-sm text-slate-500 font-semibold">Your Current Skills</span>
+          <div className="text-3xl font-extrabold text-emerald-500 mt-1">
             {candidateSkills.length} Skills
           </div>
         </div>
-        <div style={{ background: '#FFFFFF', padding: '20px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-          <span style={{ fontSize: '13px', color: '#64748B', fontWeight: '600' }}>Target Role Standard</span>
-          <div style={{ fontSize: '28px', fontWeight: '800', color: '#3B82F6', marginTop: '4px' }}>
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <span className="text-sm text-slate-500 font-semibold">Target Role Standard</span>
+          <div className="text-3xl font-extrabold text-blue-500 mt-1">
             {targetJobSkills.length} Skills
           </div>
         </div>
-        <div style={{ background: '#FFFFFF', padding: '20px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-          <span style={{ fontSize: '13px', color: '#64748B', fontWeight: '600' }}>Identified Skill Gaps</span>
-          <div style={{ fontSize: '28px', fontWeight: '800', color: '#EF4444', marginTop: '4px' }}>
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <span className="text-sm text-slate-500 font-semibold">Identified Skill Gaps</span>
+          <div className="text-3xl font-extrabold text-red-500 mt-1">
             {analysis.missingSkills.length} Missing
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '32px' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Skill Inventory Comparison */}
-        <div>
-          <div style={{ background: '#FFFFFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0', marginBottom: '24px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '16px', color: '#0F172A' }}>
+        <div className="lg:col-span-1 flex flex-col gap-6">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 className="text-lg font-bold mb-4 text-slate-900">
               ✅ Present in Resume
             </h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            <div className="flex flex-wrap gap-2">
               {analysis.presentSkills.map((skill, idx) => (
-                <span key={idx} style={{ background: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0', padding: '6px 12px', borderRadius: '20px', fontSize: '14px', fontWeight: '600' }}>
+                <span key={idx} className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full text-sm font-semibold">
                   {skill}
                 </span>
               ))}
             </div>
           </div>
 
-          <div style={{ background: '#FFFFFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '16px', color: '#0F172A' }}>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 className="text-lg font-bold mb-4 text-slate-900">
               🎯 Target Job Requirements
             </h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            <div className="flex flex-wrap gap-2">
               {targetJobSkills.map((skill, idx) => {
                 const isPresent = candidateSkills.includes(skill);
                 return (
-                  <span key={idx} style={{
-                    background: isPresent ? '#F1F5F9' : '#FEF2F2',
-                    color: isPresent ? '#475569' : '#991B1B',
-                    border: isPresent ? '1px solid #CBD5E1' : '1px solid #FECACA',
-                    padding: '6px 12px',
-                    borderRadius: '20px',
-                    fontSize: '14px',
-                    fontWeight: '600'
-                  }}>
+                  <span key={idx} className={`px-3 py-1.5 rounded-full text-sm font-semibold border ${
+                    isPresent 
+                      ? 'bg-slate-100 text-slate-600 border-slate-300' 
+                      : 'bg-red-50 text-red-700 border-red-200'
+                  }`}>
                     {skill} {isPresent ? '✓' : '✗'}
                   </span>
                 );
@@ -118,33 +115,33 @@ const SkillGap = () => {
         </div>
 
         {/* Right Column: Missing Skill Explanations */}
-        <div>
-          <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#0F172A', marginBottom: '16px' }}>
+        <div className="lg:col-span-2">
+          <h2 className="text-xl font-extrabold text-slate-900 mb-4">
             🚨 Missing Skill Analysis & Importance Rationale
           </h2>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="flex flex-col gap-4">
             {analysis.missingSkills.map((item, idx) => {
               const badgeStyle = getPriorityBadgeStyle(item.priority);
 
               return (
-                <div key={idx} style={{ background: '#FFFFFF', padding: '20px', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#0F172A', margin: 0 }}>
+                <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                  <div className="flex flex-wrap items-center justify-between mb-3 gap-3">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-xl font-extrabold text-slate-900 m-0">
                         {item.skill}
                       </h3>
-                      <span style={{ fontSize: '12px', color: '#64748B', background: '#F1F5F9', padding: '4px 10px', borderRadius: '12px', fontWeight: '600' }}>
-                        {item.category}
+                      <span className="text-xs text-slate-500 bg-slate-100 px-3 py-1 rounded-full font-semibold">
+                        {item.category || 'Core Tech'}
                       </span>
                     </div>
-                    <span style={{ fontSize: '12px', fontWeight: '700', padding: '4px 12px', borderRadius: '16px', ...badgeStyle }}>
+                    <span className={`text-xs font-bold px-3 py-1 rounded-full border ${badgeStyle}`}>
                       {item.priority} Priority
                     </span>
                   </div>
 
-                  <p style={{ margin: 0, fontSize: '14px', color: '#475569', lineHeight: '1.6' }}>
-                    <strong style={{ color: '#1E293B' }}>Why it matters: </strong>
+                  <p className="m-0 text-sm text-slate-600 leading-relaxed">
+                    <strong className="text-slate-900">Why it matters: </strong>
                     {item.whyItMatters}
                   </p>
                 </div>

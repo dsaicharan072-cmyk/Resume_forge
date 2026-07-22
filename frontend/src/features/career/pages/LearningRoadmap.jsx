@@ -1,213 +1,138 @@
 import React, { useState } from 'react';
-
-const DEFAULT_ROADMAP_DATA = {
-  totalEstimatedHours: 56,
-  totalSkillsCount: 3,
-  roadmap: [
-    {
-      skill: 'Docker',
-      priority: 'High',
-      difficulty: 'Intermediate',
-      estimatedTime: '12 Hours',
-      resources: {
-        officialDocs: {
-          title: 'Docker Official Getting Started & CLI Reference',
-          url: 'https://docs.docker.com/get-started/'
-        },
-        youtubeTutorial: {
-          title: 'Docker Tutorial for Beginners by TechWorld with Nana',
-          url: 'https://www.youtube.com/watch?v=3c-iBn73dDE'
-        },
-        practiceProject: {
-          title: 'Dockerized Microservices Expense Tracker',
-          estimatedHours: 8,
-          difficulty: 'Intermediate',
-          resumeValue: 'High'
-        }
-      },
-      aiExplanation: 'Containerizing applications ensures seamless deployment without environment drift bugs, enabling true cloud portability.'
-    },
-    {
-      skill: 'AWS',
-      priority: 'High',
-      difficulty: 'Intermediate',
-      estimatedTime: '16 Hours',
-      resources: {
-        officialDocs: {
-          title: 'AWS Fundamentals & Cloud Practitioner Documentation',
-          url: 'https://aws.amazon.com/getting-started/'
-        },
-        youtubeTutorial: {
-          title: 'AWS Certified Cloud Practitioner Course by freeCodeCamp',
-          url: 'https://www.youtube.com/watch?v=3hLmDS179YE'
-        },
-        practiceProject: {
-          title: 'Serverless REST API with AWS Lambda, API Gateway & DynamoDB',
-          estimatedHours: 10,
-          difficulty: 'Intermediate',
-          resumeValue: 'High'
-        }
-      },
-      aiExplanation: 'Understanding cloud infrastructure is essential for deploying and scaling modern distributed web applications.'
-    },
-    {
-      skill: 'System Design',
-      priority: 'High',
-      difficulty: 'Advanced',
-      estimatedTime: '24 Hours',
-      resources: {
-        officialDocs: {
-          title: 'System Design Primer Repository',
-          url: 'https://github.com/donnemartin/system-design-primer'
-        },
-        youtubeTutorial: {
-          title: 'System Design for Beginners by ByteByteGo',
-          url: 'https://www.youtube.com/watch?v=i7twT3U5F7c'
-        },
-        practiceProject: {
-          title: 'Design a Distributed Rate Limiter & URL Shortener',
-          estimatedHours: 14,
-          difficulty: 'Advanced',
-          resumeValue: 'High'
-        }
-      },
-      aiExplanation: 'System design skills demonstrate your capacity to architect scalable, resilient, and fault-tolerant infrastructure.'
-    }
-  ]
-};
+import { useLearningRoadmap } from '../careerService';
 
 const LearningRoadmap = () => {
-  const [data] = useState(DEFAULT_ROADMAP_DATA);
+  const [missingSkills] = useState(['Docker', 'AWS', 'System Design']); // Fallback skills for demonstration
+  const { data, isPending, isError } = useLearningRoadmap(missingSkills.join(','));
+
+  if (isPending) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <p className="text-primary font-bold animate-pulse">Generating your learning roadmap...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="text-center text-red-500 p-8">
+        Failed to generate learning roadmap. Please try again.
+      </div>
+    );
+  }
+
+  const roadmapData = data || { totalEstimatedHours: 0, roadmap: [] };
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1100px', margin: '0 auto', fontFamily: 'Inter, system-ui, sans-serif', color: '#1E293B' }}>
-      <header style={{ marginBottom: '32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div className="p-8 max-w-6xl mx-auto font-sans text-slate-900">
+      <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 style={{ fontSize: '32px', fontWeight: '800', color: '#0F172A', marginBottom: '8px' }}>
+          <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
             🗺️ Personalised Learning Roadmap
           </h1>
-          <p style={{ fontSize: '16px', color: '#64748B' }}>
+          <p className="text-base text-slate-500">
             Curated documentation, video courses, and hands-on projects tailored to bridge your skill gaps.
           </p>
         </div>
 
-        <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', padding: '16px 24px', borderRadius: '16px', textAlign: 'right' }}>
-          <span style={{ fontSize: '13px', color: '#166534', fontWeight: '700' }}>TOTAL ESTIMATED TIME</span>
-          <div style={{ fontSize: '28px', fontWeight: '800', color: '#15803D' }}>
-            ~{data.totalEstimatedHours} Hours
+        <div className="bg-emerald-50 border border-emerald-200 px-6 py-4 rounded-2xl text-right">
+          <span className="text-xs text-emerald-700 font-bold tracking-wider uppercase">
+            Total Estimated Time
+          </span>
+          <div className="text-3xl font-extrabold text-emerald-600 mt-1">
+            ~{roadmapData.totalEstimatedHours} Hours
           </div>
         </div>
       </header>
 
       {/* Roadmap Timeline List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-        {data.roadmap.map((step, idx) => (
+      <div className="flex flex-col gap-8">
+        {roadmapData.roadmap.map((step, idx) => (
           <div
             key={idx}
-            style={{
-              background: '#FFFFFF',
-              borderRadius: '16px',
-              border: '1px solid #E2E8F0',
-              padding: '28px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
-            }}
+            className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm"
           >
             {/* Step Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: '#3B82F6',
-                  color: '#FFFFFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: '800',
-                  fontSize: '18px'
-                }}>
+            <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-blue-500/20">
                   {idx + 1}
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#0F172A', margin: 0 }}>
+                  <h2 className="text-2xl font-extrabold text-slate-900 m-0">
                     {step.skill} Roadmap
                   </h2>
-                  <span style={{ fontSize: '13px', color: '#64748B' }}>
-                    Difficulty: <strong>{step.difficulty}</strong> • Est. Duration: <strong>{step.estimatedTime}</strong>
+                  <span className="text-sm text-slate-500">
+                    Difficulty: <strong className="text-slate-700">{step.difficulty}</strong> • Est. Duration: <strong className="text-slate-700">{step.estimatedTime}</strong>
                   </span>
                 </div>
               </div>
 
-              <span style={{
-                background: step.priority === 'High' ? '#FEF2F2' : '#FFFBEB',
-                color: step.priority === 'High' ? '#DC2626' : '#D97706',
-                border: step.priority === 'High' ? '1px solid #FECACA' : '1px solid #FDE68A',
-                padding: '6px 14px',
-                borderRadius: '20px',
-                fontSize: '13px',
-                fontWeight: '700'
-              }}>
+              <span className={`px-4 py-1.5 rounded-full text-sm font-bold border ${
+                step.priority === 'High' 
+                  ? 'bg-red-50 text-red-600 border-red-200' 
+                  : 'bg-amber-50 text-amber-600 border-amber-200'
+              }`}>
                 {step.priority} Priority
               </span>
             </div>
 
             {/* AI Explanation Banner */}
-            <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '10px', marginBottom: '24px', borderLeft: '4px solid #3B82F6' }}>
-              <p style={{ margin: 0, fontSize: '14px', color: '#334155', lineHeight: '1.5' }}>
-                🤖 <strong style={{ color: '#1E293B' }}>Why This Matters: </strong>
+            <div className="bg-blue-50 p-4 rounded-xl mb-8 border-l-4 border-blue-500">
+              <p className="m-0 text-sm text-slate-700 leading-relaxed">
+                🤖 <strong className="text-slate-900">Why This Matters: </strong>
                 {step.aiExplanation}
               </p>
             </div>
 
             {/* Resource Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {/* Official Docs */}
-              <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-                <span style={{ fontSize: '12px', color: '#3B82F6', fontWeight: '800', textTransform: 'uppercase' }}>
+              <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 hover:shadow-md transition-shadow">
+                <span className="text-xs text-blue-600 font-extrabold uppercase tracking-wider">
                   📖 Official Docs
                 </span>
-                <h4 style={{ fontSize: '15px', fontWeight: '700', color: '#0F172A', marginTop: '6px', marginBottom: '12px' }}>
+                <h4 className="text-base font-bold text-slate-900 mt-2 mb-4">
                   {step.resources.officialDocs.title}
                 </h4>
                 <a
                   href={step.resources.officialDocs.url}
                   target="_blank"
                   rel="noreferrer"
-                  style={{ fontSize: '13px', color: '#2563EB', fontWeight: '600', textDecoration: 'none' }}
+                  className="text-sm text-blue-600 font-bold hover:underline"
                 >
                   View Documentation →
                 </a>
               </div>
 
               {/* YouTube Tutorial */}
-              <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-                <span style={{ fontSize: '12px', color: '#EF4444', fontWeight: '800', textTransform: 'uppercase' }}>
+              <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 hover:shadow-md transition-shadow">
+                <span className="text-xs text-red-500 font-extrabold uppercase tracking-wider">
                   📺 Video Course
                 </span>
-                <h4 style={{ fontSize: '15px', fontWeight: '700', color: '#0F172A', marginTop: '6px', marginBottom: '12px' }}>
+                <h4 className="text-base font-bold text-slate-900 mt-2 mb-4">
                   {step.resources.youtubeTutorial.title}
                 </h4>
                 <a
                   href={step.resources.youtubeTutorial.url}
                   target="_blank"
                   rel="noreferrer"
-                  style={{ fontSize: '13px', color: '#DC2626', fontWeight: '600', textDecoration: 'none' }}
+                  className="text-sm text-red-500 font-bold hover:underline"
                 >
                   Watch Tutorial →
                 </a>
               </div>
 
               {/* Practice Project */}
-              <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-                <span style={{ fontSize: '12px', color: '#10B981', fontWeight: '800', textTransform: 'uppercase' }}>
+              <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 hover:shadow-md transition-shadow">
+                <span className="text-xs text-emerald-600 font-extrabold uppercase tracking-wider">
                   🛠️ Practice Project
                 </span>
-                <h4 style={{ fontSize: '15px', fontWeight: '700', color: '#0F172A', marginTop: '6px', marginBottom: '8px' }}>
+                <h4 className="text-base font-bold text-slate-900 mt-2 mb-3">
                   {step.resources.practiceProject.title}
                 </h4>
-                <span style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>
-                  Est. Time: {step.resources.practiceProject.estimatedHours} Hours • Resume Value: High
+                <span className="text-xs text-slate-500 block">
+                  Est. Time: {step.resources.practiceProject.estimatedHours} Hours • Resume Value: <strong className="text-emerald-600">High</strong>
                 </span>
               </div>
             </div>
