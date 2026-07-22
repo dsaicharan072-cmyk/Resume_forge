@@ -21,7 +21,8 @@ const LearningRoadmap = () => {
     );
   }
 
-  const roadmapData = data || { totalEstimatedHours: 0, roadmap: [] };
+  const roadmapData = data?.data || data || { totalEstimatedHours: 0, roadmap: [] };
+  const roadmapSteps = roadmapData?.roadmap || [];
 
   return (
     <div className="p-8 max-w-6xl mx-auto font-sans text-slate-900">
@@ -47,7 +48,7 @@ const LearningRoadmap = () => {
 
       {/* Roadmap Timeline List */}
       <div className="flex flex-col gap-8">
-        {roadmapData.roadmap.map((step, idx) => (
+        {roadmapSteps.map((step, idx) => (
           <div
             key={idx}
             className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm"

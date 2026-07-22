@@ -22,7 +22,10 @@ const RecommendedProjects = () => {
   }
 
   // Extract projects from the roadmap data
-  const projects = data?.roadmap?.map(step => ({
+  const roadmapData = data?.data || data || {};
+  const roadmapSteps = roadmapData?.roadmap || [];
+  
+  const projects = roadmapSteps.map(step => ({
     skill: step.skill,
     ...step.resources.practiceProject,
     employabilityExplanation: step.aiExplanation,
