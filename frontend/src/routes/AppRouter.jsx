@@ -9,6 +9,16 @@ const LoginPage = lazy(() => import('../features/auth/pages/LoginPage'));
 
 const RegisterPage = lazy(() => import('../features/auth/pages/RegisterPage'));
 
+// Career Pages
+const CompanyMatch = lazy(() => import('../features/career/pages/CompanyMatch'));
+const SkillGap = lazy(() => import('../features/career/pages/SkillGap'));
+const LearningRoadmap = lazy(() => import('../features/career/pages/LearningRoadmap'));
+const RecommendedProjects = lazy(() => import('../features/career/pages/RecommendedProjects'));
+const InterviewPreparation = lazy(() => import('../features/career/pages/InterviewPreparation'));
+const LiveJobs = lazy(() => import('../features/career/pages/LiveJobs'));
+const ApplicationTracker = lazy(() => import('../features/career/pages/ApplicationTracker'));
+const AIRecruiter = lazy(() => import('../features/career/pages/AIRecruiter'));
+
 // Simple loading fallback
 const PageLoader = () => (
   <div className="flex h-full w-full items-center justify-center p-8">
@@ -54,7 +64,72 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      // Other routes (profile, resume, career, etc) will go here
+      // Career Routes
+      {
+        path: 'career/match',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <CompanyMatch />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'career/skill-gap',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <SkillGap />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'career/roadmap',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <LearningRoadmap />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'career/projects',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <RecommendedProjects />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'career/interview',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <InterviewPreparation />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'career/jobs',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <LiveJobs />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'career/tracker',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ApplicationTracker />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'career/recruiter',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AIRecruiter />
+          </Suspense>
+        ),
+      },
+      // Other routes (profile, resume, etc) will go here
     ],
   },
 ]);

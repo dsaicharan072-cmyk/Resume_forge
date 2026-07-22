@@ -4,7 +4,6 @@ const learningEngine = require('./career.learningEngine');
 const interviewEngine = require('./career.interviewEngine');
 const jobsEngine = require('./career.jobsEngine');
 const applicationTracker = require('./career.applicationTracker');
-const applicationTracker = require('./career.applicationTracker');
 const careerAI = require('./career.ai');
 const careerRepository = require('./career.repository');
 

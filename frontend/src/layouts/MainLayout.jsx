@@ -1,4 +1,15 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, NavLink } from 'react-router-dom';
+
+const navItems = [
+  { path: '/career/match', label: 'Company Match', icon: '🏢' },
+  { path: '/career/skill-gap', label: 'Skill Gap', icon: '📊' },
+  { path: '/career/roadmap', label: 'Learning', icon: '🗺️' },
+  { path: '/career/projects', label: 'Projects', icon: '🚀' },
+  { path: '/career/interview', label: 'Interview Prep', icon: '🧠' },
+  { path: '/career/jobs', label: 'Live Jobs', icon: '💼' },
+  { path: '/career/tracker', label: 'App Tracker', icon: '📈' },
+  { path: '/career/recruiter', label: 'AI Recruiter', icon: '🤖' },
+];
 
 export default function MainLayout() {
   return (
@@ -11,9 +22,20 @@ export default function MainLayout() {
         <div className="flex-1 overflow-y-auto py-4 px-4">
           <div className="space-y-1">
             {/* Nav items will go here */}
-            <div className="h-10 rounded-md bg-surface-hover flex items-center px-3 text-sm font-medium">Dashboard</div>
-            <div className="h-10 rounded-md flex items-center px-3 text-sm font-medium text-muted hover:text-white hover:bg-surface-hover cursor-pointer transition-colors">Resume</div>
-            <div className="h-10 rounded-md flex items-center px-3 text-sm font-medium text-muted hover:text-white hover:bg-surface-hover cursor-pointer transition-colors">Career</div>
+            <NavLink to="/dashboard" className={({isActive}) => `h-10 rounded-md flex items-center px-3 text-sm font-medium transition-colors ${isActive ? 'bg-surface-hover text-white' : 'text-muted hover:text-white hover:bg-surface-hover'}`}>Dashboard</NavLink>
+            <NavLink to="/resume" className={({isActive}) => `h-10 rounded-md flex items-center px-3 text-sm font-medium transition-colors ${isActive ? 'bg-surface-hover text-white' : 'text-muted hover:text-white hover:bg-surface-hover'}`}>Resume</NavLink>
+            
+            <div className="pt-4 pb-2 text-xs font-bold text-muted uppercase tracking-wider px-3">Career OS</div>
+            {navItems.map((item) => (
+              <NavLink 
+                key={item.path}
+                to={item.path} 
+                className={({isActive}) => `h-10 rounded-md flex items-center px-3 text-sm font-medium transition-colors gap-2 ${isActive ? 'bg-surface-hover text-white' : 'text-muted hover:text-white hover:bg-surface-hover'}`}
+              >
+                <span>{item.icon}</span>
+                {item.label}
+              </NavLink>
+            ))}
           </div>
         </div>
       </aside>
