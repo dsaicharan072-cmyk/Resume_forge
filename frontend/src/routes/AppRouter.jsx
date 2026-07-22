@@ -9,6 +9,10 @@ const LoginPage = lazy(() => import('../features/auth/pages/LoginPage'));
 
 const RegisterPage = lazy(() => import('../features/auth/pages/RegisterPage'));
 
+// Resume Pages
+const ResumeUploadPage = lazy(() => import('../features/resume/pages/ResumeUploadPage'));
+const ResumeAnalysisPage = lazy(() => import('../features/resume/pages/ResumeAnalysisPage'));
+
 // Career Pages
 const CompanyMatch = lazy(() => import('../features/career/pages/CompanyMatch'));
 const SkillGap = lazy(() => import('../features/career/pages/SkillGap'));
@@ -129,7 +133,24 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      // Other routes (profile, resume, etc) will go here
+      // Resume Routes
+      {
+        path: 'resume',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ResumeUploadPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'resume/analyze',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ResumeAnalysisPage />
+          </Suspense>
+        ),
+      },
+      // Other routes (profile, etc) will go here
     ],
   },
 ]);
