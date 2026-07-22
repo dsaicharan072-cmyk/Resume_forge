@@ -16,7 +16,7 @@ const ResumeUploadPage = () => {
     
     uploadResume(file, {
       onSuccess: (data) => {
-        navigate(`/resume/analyze?id=${data.id}`);
+        navigate(`/resume/analyze?id=${data._id || data.id}`);
       }
     });
   };

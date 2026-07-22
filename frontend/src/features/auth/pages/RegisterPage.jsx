@@ -55,7 +55,7 @@ export default function RegisterPage() {
         
         <Button 
           type="submit" 
-          className="w-full"
+          className="w-full text-black"
           isLoading={isPending}
         >
           Create Account

@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useRecruiter } from '../careerService';
+import { getCareerProfile } from '../careerProfile';
 
 const AIRecruiter = () => {
   const { mutate: evaluateResume, data, isPending, isError } = useRecruiter();
   const [companyName, setCompanyName] = useState('Google');
+  const profile = getCareerProfile();
   
   const handleEvaluate = (e) => {
     e.preventDefault();
     evaluateResume({ 
       companyName,
       resumeAnalysis: {
-        skills: ['React', 'Node.js', 'System Design', 'AWS'],
-        experienceYears: 4
+        skills: profile.skills,
+        experienceYears: profile.experienceYears
       }
     });
   };

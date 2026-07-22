@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useInterviewPrep } from '../careerService';
+import { getCareerProfile } from '../careerProfile';
 
 const InterviewPreparation = () => {
   const { mutate: getInterviewPrep, data, isPending, isError } = useInterviewPrep();
   const [activeTab, setActiveTab] = useState('technical');
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const profile = getCareerProfile();
 
   useEffect(() => {
-    // Generate interview prep for a default fallback role
-    getInterviewPrep({ targetRole: 'Senior Full Stack Engineer' });
-  }, [getInterviewPrep]);
+    getInterviewPrep({ targetRole: profile.targetRole });
+  }, [getInterviewPrep, profile.targetRole]);
 
   const toggleExpand = (idx) => {
     setExpandedIndex(expandedIndex === idx ? null : idx);

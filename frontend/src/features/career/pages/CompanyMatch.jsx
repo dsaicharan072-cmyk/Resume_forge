@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Building2, CheckCircle2, ShieldCheck, Sparkles, TriangleAlert } from 'lucide-react';
 import { useCompanyMatch } from '../careerService';
+import { getCareerProfile } from '../careerProfile';
 
 const CompanyMatch = () => {
   const { mutate: getMatches, data, isPending, isError } = useCompanyMatch();
   const [selectedCompany, setSelectedCompany] = useState(null);
+  const profile = getCareerProfile();
+  const skillsKey = profile.skills.join(',');
 
   useEffect(() => {
-    // Fetch matches with a default fallback payload representing a standard user
     getMatches({
       profile: {
-        skills: ['React', 'Node.js', 'TypeScript', 'AWS'],
-        experienceYears: 2
+        skills: profile.skills,
+        experienceYears: profile.experienceYears
       }
     });
-  }, [getMatches]);
+  }, [getMatches, profile.experienceYears, skillsKey]);
 
   useEffect(() => {
     const matches = data?.data?.matches ?? data?.matches ?? [];
@@ -58,7 +60,9 @@ const CompanyMatch = () => {
           Company match
         </h1>
         <p className="text-base text-muted">
-          See how your skills align with the expectations of leading technology companies.
+          {profile.skills.length
+            ? `Ranked from ${profile.resumeName} for a ${profile.targetRole} path.`
+            : 'Upload and analyse a resume first to receive personalised company matches.'}
         </p>
       </header>
 

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { ArrowUpRight, BriefcaseBusiness, Building2, MapPin, SlidersHorizontal, Sparkles, Wallet } from 'lucide-react';
 import { useLiveJobs } from '../careerService';
+import { getCareerProfile } from '../careerProfile';
 
 const LiveJobs = () => {
   const [minScore, setMinScore] = useState(70);
-  const { data: responseData, isPending, isError } = useLiveJobs(minScore);
+  const profile = getCareerProfile();
+  const { data: responseData, isPending, isError } = useLiveJobs(minScore, profile.skills);
   const jobs = responseData?.data?.jobs ?? responseData?.jobs ?? [];
   const totalJobsFound = responseData?.data?.totalJobsFound ?? responseData?.totalJobsFound ?? 0;
 
@@ -25,7 +27,9 @@ const LiveJobs = () => {
             Live job matches
           </h1>
           <p className="text-base text-muted">
-            Explore roles scored against your current skills and experience.
+            {profile.skills.length
+              ? `Roles scored against the skills detected in ${profile.resumeName}.`
+              : 'Upload and analyse a resume to personalise these matches.'}
           </p>
         </div>
 

@@ -55,8 +55,10 @@ async function fetchInterviewPrep(payload) {
   return response.json();
 }
 
-async function fetchLiveJobs(minMatchScore = 70) {
-  const response = await fetch(`${API_BASE}/jobs?minMatchScore=${minMatchScore}`);
+async function fetchLiveJobs(minMatchScore = 70, skills = []) {
+  const query = new URLSearchParams({ minMatchScore: String(minMatchScore) });
+  if (skills.length) query.set('skills', skills.join(','));
+  const response = await fetch(`${API_BASE}/jobs?${query}`);
 
   if (!response.ok) {
     throw new Error('Failed to fetch live job feed');
@@ -128,10 +130,10 @@ export function useInterviewPrep() {
   });
 }
 
-export function useLiveJobs(minMatchScore) {
+export function useLiveJobs(minMatchScore, skills = []) {
   return useQuery({
-    queryKey: ['liveJobs', minMatchScore],
-    queryFn: () => fetchLiveJobs(minMatchScore)
+    queryKey: ['liveJobs', minMatchScore, skills],
+    queryFn: () => fetchLiveJobs(minMatchScore, skills)
   });
 }
 

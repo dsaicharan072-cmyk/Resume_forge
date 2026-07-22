@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useLearningRoadmap } from '../careerService';
+import { getCareerProfile, targetSkillsFor } from '../careerProfile';
 
 const LearningRoadmap = () => {
-  const [missingSkills] = useState(['Docker', 'AWS', 'System Design']); // Fallback skills for demonstration
+  const profile = getCareerProfile();
+  const missingSkills = targetSkillsFor(profile).filter((skill) => !profile.skills.includes(skill));
   const { data, isPending, isError } = useLearningRoadmap(missingSkills.join(','));
 
   if (isPending) {
@@ -32,7 +34,9 @@ const LearningRoadmap = () => {
             🗺️ Personalised Learning Roadmap
           </h1>
           <p className="text-base text-muted">
-            Curated documentation, video courses, and hands-on projects tailored to bridge your skill gaps.
+            {profile.skills.length
+              ? `A ${profile.targetRole} roadmap based on gaps found in ${profile.resumeName}.`
+              : 'Upload and analyse a resume to generate a tailored learning roadmap.'}
           </p>
         </div>
 

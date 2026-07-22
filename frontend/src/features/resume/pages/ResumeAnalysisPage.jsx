@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSearchParams, useNavigate, Navigate } from 'react-router-dom';
 import { useResumeAnalysis } from '../hooks/useResume';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '../../../components/Card';
@@ -9,6 +9,7 @@ import Skeleton from '../../../components/Skeleton';
 import Button from '../../../components/Button';
 import { ArrowLeft, Download, AlertTriangle, CheckCircle2, XCircle, Wand2, Copy, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { saveCareerProfile } from '../../career/careerProfile';
 
 const ScoreGauge = ({ score }) => {
   // Simple circular gauge representation using SVG
@@ -46,6 +47,10 @@ const ResumeAnalysisPage = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError } = useResumeAnalysis(id);
 
+  useEffect(() => {
+    if (data?.parsedData) saveCareerProfile(data);
+  }, [data]);
+
   if (!id) {
     return <Navigate to="/resume" replace />;
   }
@@ -74,6 +79,28 @@ const ResumeAnalysisPage = () => {
     return <div className="p-4 text-destructive">Failed to load analysis.</div>;
   }
 
+  const scoreBreakdown = Object.fromEntries(
+    (data?.atsScore?.breakdown || []).map((item) => [item.category?.toLowerCase(), item.score])
+  );
+  const analysis = {
+    overallScore: data?.atsScore?.total ?? data?.overallScore ?? 0,
+    categories: data?.categories || {
+      impact: scoreBreakdown.impact ?? 0,
+      brevity: scoreBreakdown.brevity ?? 0,
+      keywords: data?.keywordMetrics?.coverage ?? scoreBreakdown.keywords ?? 0
+    },
+    atsFindings: data?.atsFindings || [
+      {
+        type: data?.parsedData?.skills?.length ? 'success' : 'warning',
+        location: 'Resume parsing',
+        message: data?.parsedData?.skills?.length
+          ? 'Your uploaded resume has been parsed and is now powering Career OS recommendations.'
+          : 'We could not identify a dedicated skills section. Add one to improve personalised recommendations.'
+      }
+    ],
+    rewriteSuggestions: data?.rewriteSuggestions || []
+  };
+
   return (
     <div className="max-w-5xl mx-auto space-y-6 pt-4">
       {/* Header Actions */}
@@ -101,29 +128,29 @@ const ResumeAnalysisPage = () => {
               <CardDescription>Based on 40+ industry data points</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center pt-4">
-              <ScoreGauge score={data.overallScore} />
+              <ScoreGauge score={analysis.overallScore} />
               
               <div className="w-full mt-8 space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span className="font-medium">Impact & Metrics</span>
-                    <span className="text-muted-foreground">{data.categories.impact}/100</span>
+                    <span className="text-muted-foreground">{analysis.categories.impact}/100</span>
                   </div>
-                  <Progress value={data.categories.impact} className="h-1.5 [&>div]:bg-amber-500" />
+                  <Progress value={analysis.categories.impact} className="h-1.5 [&>div]:bg-amber-500" />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span className="font-medium">Brevity & Formatting</span>
-                    <span className="text-muted-foreground">{data.categories.brevity}/100</span>
+                    <span className="text-muted-foreground">{analysis.categories.brevity}/100</span>
                   </div>
-                  <Progress value={data.categories.brevity} className="h-1.5 [&>div]:bg-green-500" />
+                  <Progress value={analysis.categories.brevity} className="h-1.5 [&>div]:bg-green-500" />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span className="font-medium">Keywords Match</span>
-                    <span className="text-muted-foreground">{data.categories.keywords}/100</span>
+                    <span className="text-muted-foreground">{analysis.categories.keywords}/100</span>
                   </div>
-                  <Progress value={data.categories.keywords} className="h-1.5 [&>div]:bg-amber-500" />
+                  <Progress value={analysis.categories.keywords} className="h-1.5 [&>div]:bg-amber-500" />
                 </div>
               </div>
             </CardContent>
@@ -145,7 +172,7 @@ const ResumeAnalysisPage = () => {
               <CardContent className="pt-6">
                 
                 <TabsContent value="ats" className="mt-0 space-y-4">
-                  {data.atsFindings.map((finding, idx) => (
+                  {analysis.atsFindings.map((finding, idx) => (
                     <div key={idx} className="flex gap-4 p-4 rounded-lg border border-border bg-card/50">
                       <div className="shrink-0 mt-0.5">
                         {finding.type === 'error' && <XCircle className="text-destructive" size={20} />}
@@ -168,11 +195,11 @@ const ResumeAnalysisPage = () => {
                   <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 flex gap-3">
                     <Wand2 className="text-primary shrink-0" size={20} />
                     <p className="text-sm text-primary-foreground font-medium text-foreground">
-                      Our AI found {data.rewriteSuggestions.length} bullet points that could be optimized for higher impact.
+                      Our AI found {analysis.rewriteSuggestions.length} bullet points that could be optimized for higher impact.
                     </p>
                   </div>
 
-                  {data.rewriteSuggestions.map((suggestion, idx) => (
+                  {analysis.rewriteSuggestions.map((suggestion, idx) => (
                     <div key={idx} className="border border-border rounded-xl overflow-hidden shadow-sm">
                       <div className="bg-muted/30 p-4 border-b border-border">
                         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Original</p>

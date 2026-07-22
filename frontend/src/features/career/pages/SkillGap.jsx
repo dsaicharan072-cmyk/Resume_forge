@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useSkillGap } from '../careerService';
+import { getCareerProfile, targetSkillsFor } from '../careerProfile';
 
 const SkillGap = () => {
   const { mutate: getSkillGap, data, isPending, isError } = useSkillGap();
-  const [candidateSkills] = useState(['React', 'Node', 'MongoDB']);
-  const [targetJobSkills] = useState(['React', 'Node', 'MongoDB', 'Docker', 'AWS', 'System Design']);
+  const profile = getCareerProfile();
+  const candidateSkills = profile.skills;
+  const targetJobSkills = targetSkillsFor(profile);
 
   useEffect(() => {
-    // Fetch skill gap with fallback payload
     getSkillGap({
       candidateSkills,
       targetRoleSkills: targetJobSkills,
-      targetRole: 'Senior Full Stack Engineer'
+      targetRole: profile.targetRole
     });
-  }, [getSkillGap, candidateSkills, targetJobSkills]);
+  }, [getSkillGap, profile.targetRole, candidateSkills.join(','), targetJobSkills.join(',')]);
 
   const getPriorityBadgeStyle = (priority) => {
     switch (priority) {
@@ -53,7 +54,9 @@ const SkillGap = () => {
           ⚡ Skill Gap Engine
         </h1>
         <p className="text-base text-muted">
-          Deterministic algorithm comparing your current skills against target role standards to identify actionable missing skills.
+          {candidateSkills.length
+            ? `Using the skills detected in ${profile.resumeName}, aligned to a ${profile.targetRole} path.`
+            : 'Upload and analyse a resume to build a personalised skill inventory.'}
         </p>
       </header>
 
