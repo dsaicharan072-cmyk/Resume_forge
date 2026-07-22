@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Building2, CheckCircle2, ShieldCheck, Sparkles, TriangleAlert } from 'lucide-react';
 import { useCompanyMatch } from '../careerService';
 
 const CompanyMatch = () => {
@@ -48,13 +49,16 @@ const CompanyMatch = () => {
   const matches = data?.data?.matches ?? data?.matches ?? [];
 
   return (
-    <div className="p-8 max-w-7xl mx-auto font-sans text-foreground">
+    <div className="max-w-7xl mx-auto font-sans text-foreground">
       <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-foreground mb-2">
-          🏢 Target Company Match Engine
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+          <Sparkles size={14} /> Profile-based ranking
+        </div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+          Company match
         </h1>
         <p className="text-base text-muted">
-          Deterministic algorithm matching your resume & profile against top tech company standards.
+          See how your skills align with the expectations of leading technology companies.
         </p>
       </header>
 
@@ -75,18 +79,18 @@ const CompanyMatch = () => {
                 <div
                   key={item.companyId}
                   onClick={() => setSelectedCompany(item)}
-                  className={`flex items-center justify-between p-5 rounded-xl border cursor-pointer transition-all ${
+                  className={`flex items-center justify-between p-5 rounded-xl border cursor-pointer transition-all duration-200 ${
                     isSelected 
-                      ? 'bg-surface-hover border-transparent shadow-md' 
-                      : 'bg-surface border-border hover:bg-surface-hover'
+                      ? 'bg-primary/5 shadow-md'
+                      : 'bg-surface border-border hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md'
                   }`}
                   style={{
                     borderColor: isSelected ? color : undefined,
                   }}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-surface-hover flex items-center justify-center font-bold text-lg text-muted">
-                      {item.companyName.charAt(0)}
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                      <Building2 size={21} />
                     </div>
                     <div>
                       <h3 className="text-lg font-bold m-0 text-foreground">{item.companyName}</h3>
@@ -108,7 +112,7 @@ const CompanyMatch = () => {
 
         {/* Selected Company Details */}
         {selectedCompany && (
-          <div className="bg-surface p-6 rounded-2xl border border-border shadow-sm h-fit">
+            <div className="bg-surface p-6 rounded-2xl border border-border shadow-sm h-fit">
             <div className="flex items-center justify-between mb-5">
               <div>
                 <h2 className="text-2xl font-extrabold text-foreground m-0">
@@ -139,7 +143,7 @@ const CompanyMatch = () => {
             {/* Strong Fit Reasons */}
             <div className="mb-5">
               <h4 className="text-sm font-bold text-emerald-500 mb-2">
-                ✅ Key Strengths & Fit
+                <CheckCircle2 size={16} className="inline mr-1.5 -mt-0.5" /> Key strengths & fit
               </h4>
               <ul className="m-0 pl-5 text-sm text-muted list-disc">
                 {selectedCompany.reasons.strongFit.map((reason, idx) => (
@@ -151,7 +155,7 @@ const CompanyMatch = () => {
             {/* Skill Gaps */}
             <div className="mb-6">
               <h4 className="text-sm font-bold text-red-500 mb-2">
-                ⚠️ Identified Gaps
+                <TriangleAlert size={16} className="inline mr-1.5 -mt-0.5" /> Identified gaps
               </h4>
               <ul className="m-0 pl-5 text-sm text-muted list-disc">
                 {selectedCompany.reasons.gaps.map((reason, idx) => (
@@ -162,7 +166,7 @@ const CompanyMatch = () => {
 
             {/* Matched Skills Chips */}
             <div className="mb-5">
-              <h4 className="text-xs font-bold text-muted mb-2 uppercase tracking-wider">Matched Skills</h4>
+              <h4 className="text-xs font-bold text-muted mb-2 uppercase tracking-wider"><ShieldCheck size={14} className="inline mr-1.5 -mt-0.5" />Matched skills</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedCompany.matchedSkills.map((skill, idx) => (
                   <span key={idx} className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">

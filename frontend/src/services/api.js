@@ -27,7 +27,7 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
       // Handle unauthorized (e.g., clear state, redirect to login)
       useAuthStore.getState().logout();
     }

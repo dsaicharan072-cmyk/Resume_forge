@@ -15,7 +15,13 @@ const userRepository = require('./user.repository');
 
 class AuthService {
   async register(userData) {
-    const { name, email, password } = userData;
+    const name = String(userData.name || '').trim();
+    const email = String(userData.email || '').trim().toLowerCase();
+    const password = String(userData.password || '');
+
+    if (!name || !email || !password) {
+      throw new Error('Name, email, and password are required');
+    }
 
     // Check if user exists
     const existingUser = await userRepository.findUserByEmail(email);
@@ -32,8 +38,13 @@ class AuthService {
   }
 
   async login(email, password) {
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    if (!normalizedEmail || !password) {
+      throw new Error('Email and password are required');
+    }
+
     // Check if user exists (include password for comparison)
-    const user = await userRepository.findUserByEmail(email, true);
+    const user = await userRepository.findUserByEmail(normalizedEmail, true);
     if (!user) {
       throw new Error('Invalid credentials');
     }

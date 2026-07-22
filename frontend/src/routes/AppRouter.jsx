@@ -2,6 +2,17 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import AuthLayout from '../layouts/AuthLayout';
+import { useAuthStore } from '../store/authStore';
+
+const RequireAuth = ({ children }) => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
+
+const RedirectAuthenticatedUser = ({ children }) => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
+};
 
 // Lazy loaded pages
 const DashboardPage = lazy(() => import('../features/dashboard/pages/DashboardPage'));
@@ -32,7 +43,7 @@ const PageLoader = () => (
 
 const router = createBrowserRouter([
   {
-    element: <AuthLayout />,
+    element: <RedirectAuthenticatedUser><AuthLayout /></RedirectAuthenticatedUser>,
     children: [
       {
         path: '/login',
@@ -54,7 +65,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <MainLayout />,
+    element: <RequireAuth><MainLayout /></RequireAuth>,
     children: [
       {
         index: true,

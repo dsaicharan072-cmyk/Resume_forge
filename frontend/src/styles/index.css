@@ -19,6 +19,11 @@
     @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
   }
 
+  ::selection {
+    background: #dbeafe;
+    color: #0f172a;
+  }
+
   button, input {
     font: inherit;
   }
